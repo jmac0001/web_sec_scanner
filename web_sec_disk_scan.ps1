@@ -1,3 +1,135 @@
+<#
+.SYNOPSIS
+  Scans registry and config files for TLS/SSL and HSTS settings and provides remediation recommendations.
+
+.DESCRIPTION
+  This script checks:
+    - Windows SCHANNEL registry settings
+    - Application config files for TLS protocols and cipher suites
+    - HSTS headers in web server configs
+    - Provides remediation output with references for NGINX, Apache, and Node.js
+
+.OUTPUT
+  A CSV report containing all findings and recommendations.
+
+.REFERENCE
+  - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+  - https://nginx.org/en/docs/http/ngx_http_headers_module.html
+  - https://httpd.apache.org/docs/2.4/mod/mod_headers.html
+  - https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
+#>
+
+
+
+# Define default install paths for common web services
+$DefaultPaths = @(
+    "C:\inetpub\wwwroot",              # IIS
+    "C:\nginx",                        # NGINX
+    "C:\Apache24",                     # Apache
+    "C:\Program Files\PostgreSQL",    # PostgreSQL
+    "C:\Program Files\MySQL",         # MySQL
+    "C:\Program Files\MariaDB",       # MariaDB
+    "C:\Program Files\nodejs",        # NodeJS
+    "$env:APPDATA\npm"                # NPM
+)
+
+# Create output directory if it doesn't exist
+$OutputFolder = ".\output"
+if (-Not (Test-Path -Path $OutputFolder)) {
+    New-Item -ItemType Directory -Path $OutputFolder | Out-Null
+}
+
+$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
+$ComputerName = $env:COMPUTERNAME
+$OutputFilePrefix = "$OutputFolder\$Timestamp" + "_$ComputerName"
+
+# Initialize a timer for saving every minute
+$LastSave = Get-Date
+
+# Collect initial scan results from default paths
+$InitialResults = foreach ($Path in $DefaultPaths) {
+    if (Test-Path $Path) {
+        Get-ChildItem -Path $Path -Recurse -ErrorAction SilentlyContinue
+    }
+}
+
+$InitialResults | Out-File -FilePath "$OutputFilePrefix`_default_scan.txt"
+
+# Function to periodically save results
+function Save-ResultsPeriodically {
+    param (
+        [System.Collections.ArrayList]$Results,
+        [string]$FilePath
+    )
+    $Now = Get-Date
+    if (($Now - $script:LastSave).TotalSeconds -ge 60) {
+        $Results | Out-File -FilePath $FilePath -Append
+        $script:LastSave = $Now
+    }
+}
+
+
+$OutputFolder = ".\output"
+if (-Not (Test-Path -Path $OutputFolder)) {
+    New-Item -ItemType Directory -Path $OutputFolder | Out-Null
+}
+$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
+$ComputerName = $env:COMPUTERNAME
+
+
+
+Function Get-ConfigRecommendation {
+    Param ([string]$Line)
+
+    if ($Line -match "(?i)(TLSv1|TLSv1\.1)") {
+        return "Deprecated protocol, remove"
+    } elseif ($Line -match "(?i)TLSv1\.2|TLSv1\.3") {
+        return "Acceptable protocol"
+    } elseif ($Line -match "(?i)cipher.*(NULL|RC4|MD5|EXPORT)") {
+        return "Weak cipher, remove"
+    } elseif ($Line -match "(?i)keystore|truststore") {
+        return "Java security config, review"
+    } else {
+        return "Review manually"
+    }
+}
+
+Function Backup-RegistryKey {
+    Param([string]$RegKey)
+    reg export $RegKey $BackupRegistryPath /y | Out-Null
+}
+
+Function Remediate-RegistrySetting {
+    Param (
+        [string]$Protocol
+    )
+
+    $RegPath = "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$Protocol\Server"
+    Backup-RegistryKey -RegKey "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL"
+
+    If (-Not (Test-Path "Registry::$RegPath")) {
+        New-Item -Path "Registry::$RegPath" -Force | Out-Null
+    }
+
+    Set-ItemProperty -Path "Registry::$RegPath" -Name "Enabled" -Value 0 -Type DWord
+    Set-ItemProperty -Path "Registry::$RegPath" -Name "DisabledByDefault" -Value 1 -Type DWord
+}
+
+Function Get-Recommendation {
+    param ([string]$line)
+
+    if ($line -match "(?i)TLSv1|TLSv1\.1|SSL") {
+        return "Deprecated protocol version used"
+    } elseif ($line -match ($WeakCiphers -join "|")) {
+        return "Weak cipher suite used"
+    } elseif ($line -match "TLSv1\.2|TLSv1\.3") {
+        return "Acceptable protocol (prefer TLS 1.3)"
+    } elseif ($line -match "http:" -and $line -notmatch "https:") {
+        return "Insecure HTTP protocol detected"
+    } else {
+        return "Potential TLS config - review required"
+    }
+}
 
 param (
     [switch]$Remediate = $false
@@ -96,21 +228,7 @@ Function Get-TlsRegistryStatus {
     }
 }
 
-Function Get-ConfigRecommendation {
-    Param ([string]$Line)
 
-    if ($Line -match "(?i)(TLSv1|TLSv1\.1)") {
-        return "Deprecated protocol, remove"
-    } elseif ($Line -match "(?i)TLSv1\.2|TLSv1\.3") {
-        return "Acceptable protocol"
-    } elseif ($Line -match "(?i)cipher.*(NULL|RC4|MD5|EXPORT)") {
-        return "Weak cipher, remove"
-    } elseif ($Line -match "(?i)keystore|truststore") {
-        return "Java security config, review"
-    } else {
-        return "Review manually"
-    }
-}
 
 Function Scan-Filesystem {
     foreach ($Drive in $Drives) {
@@ -150,6 +268,54 @@ foreach ($Protocol in $Protocols) {
 # Run filesystem scan
 Scan-Filesystem
 
+# === HSTS Detection ===
+Function Get-HSTSRecommendation {
+    param ([string]$Line)
+
+    if ($Line -match "(?i)Strict-Transport-Security") {
+        if ($Line -match "max-age=\d{1,5}") {
+            return "HSTS max-age too short (recommend 6+ months)"
+        } else {
+            return "HSTS appears configured"
+        }
+    } else {
+        return "Missing HSTS header"
+    }
+}
+
+Function Scan-HSTSHeaders {
+    $HSTSKeywords = @("Strict-Transport-Security", "HSTS")
+    foreach ($Drive in $Drives) {
+        Get-ChildItem -Path $Drive.Root -Recurse -Include $FileExtensions -ErrorAction SilentlyContinue |
+        Where-Object { -Not $_.PSIsContainer } |
+        ForEach-Object {
+            $Path = $_.FullName
+            try {
+                $Lines = Get-Content $Path -ErrorAction SilentlyContinue
+                for ($i = 0; $i -lt $Lines.Count; $i++) {
+                    $Line = $Lines[$i]
+                    if ($HSTSKeywords | Where-Object { $Line -match $_ }) {
+                        $Results += [PSCustomObject]@{
+                            Technology = Detect-Technology -FilePath $Path
+                            Source         = "File"
+                            Location       = "$Path (Line $($i+1))"
+                            Setting        = $Line.Trim()
+                            ClientStatus   = "-"
+                            ServerStatus   = "-"
+                            Recommendation = Get-HSTSRecommendation -Line $Line
+                            TLS13Compatible = "-"
+                        }
+                    }
+                }
+            } catch {}
+        }
+    }
+}
+
+Write-Host "Scanning HSTS headers in configuration files..."
+Scan-HSTSHeaders
+
+
 # Output results
 $OutputPath = ".\TLS_Config_Audit_Report.csv"
 $Results | Export-Csv -Path $OutputPath -NoTypeInformation -Encoding UTF8
@@ -170,26 +336,9 @@ If (-Not (Test-Path $BackupConfigPath)) {
     New-Item -ItemType Directory -Path $BackupConfigPath | Out-Null
 }
 
-Function Backup-RegistryKey {
-    Param([string]$RegKey)
-    reg export $RegKey $BackupRegistryPath /y | Out-Null
-}
 
-Function Remediate-RegistrySetting {
-    Param (
-        [string]$Protocol
-    )
 
-    $RegPath = "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$Protocol\Server"
-    Backup-RegistryKey -RegKey "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL"
 
-    If (-Not (Test-Path "Registry::$RegPath")) {
-        New-Item -Path "Registry::$RegPath" -Force | Out-Null
-    }
-
-    Set-ItemProperty -Path "Registry::$RegPath" -Name "Enabled" -Value 0 -Type DWord
-    Set-ItemProperty -Path "Registry::$RegPath" -Name "DisabledByDefault" -Value 1 -Type DWord
-}
 
 Function Remediate-ConfigFile {
     Param (
@@ -305,21 +454,7 @@ Function Detect-Technology {
 }
 
 
-Function Get-Recommendation {
-    param ([string]$line)
 
-    if ($line -match "(?i)TLSv1|TLSv1\.1|SSL") {
-        return "Deprecated protocol version used"
-    } elseif ($line -match ($WeakCiphers -join "|")) {
-        return "Weak cipher suite used"
-    } elseif ($line -match "TLSv1\.2|TLSv1\.3") {
-        return "Acceptable protocol (prefer TLS 1.3)"
-    } elseif ($line -match "http:" -and $line -notmatch "https:") {
-        return "Insecure HTTP protocol detected"
-    } else {
-        return "Potential TLS config - review required"
-    }
-}
 
 $Drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -gt 0 }
 
@@ -350,3 +485,4 @@ $Results | Format-Table -AutoSize
 $Results | Export-Csv -Path $OutputPath -NoTypeInformation -Encoding UTF8
 
 Write-Host "Scan complete. Results saved to: $OutputPath"
+
