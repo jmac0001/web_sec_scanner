@@ -1,2 +1,2 @@
-# tls_scanner
-TLS Port and File Scanner
+# Web Security Scanners
+TLS and HSTS Port and File Scanners
