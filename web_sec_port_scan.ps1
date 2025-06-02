@@ -1,10 +1,6 @@
 <#
 .SYNOPSIS
-'192.168.1.201',
-'192.168.1.202',
-'192.168.1.203',
-'192.168.1.204',
-'192.168.1.205't TCP port for TLS protocol and cipher suite support.
+TCP port for TLS protocol and cipher suite support.
 
 .DESCRIPTION
   This script:
@@ -112,7 +108,7 @@ $OutputCsv = "$OutputFolder\TcpPortTlsScanReport.csv"
 
 
 # === User Preferred TLS Configuration ===
-
+<#
 $UserPreferredProtocols = @("Tls13", "Tls12","TLS 1.3", "TLS 1.2")
 $UserPreferredCiphers = @(
     "TLS_AES_256_GCM_SHA384",
@@ -135,7 +131,7 @@ $ProtocolsToTest = @(
     [Net.SecurityProtocolType]::Tls12,
     [Net.SecurityProtocolType]::Tls13
 )
-
+#>
 
 
 $Results = @()

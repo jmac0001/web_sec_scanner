@@ -19,18 +19,61 @@
   - https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
 #>
 
+# ------------------------------------------------------------------------------
+Function Load-JsonConfig {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $True)]
+        [String]$FilePath
+    )
+
+    If (-Not (Test-Path -Path $FilePath)) {
+        Throw "File '$FilePath' does not exist."
+    }
+
+    $JsonContent = Get-Content -Path $FilePath -Raw
+    $ConfigObject = ConvertFrom-Json -InputObject $JsonContent
+    Return $ConfigObject
+}
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+Function Save-JsonConfig {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $True)]
+        [Object]$ConfigObject,
+
+        [Parameter(Mandatory = $True)]
+        [String]$FilePath
+    )
+
+    $JsonContent = ConvertTo-Json -InputObject $ConfigObject -Depth 5
+    Set-Content -Path $FilePath -Value $JsonContent -Encoding UTF8
+}
+# ------------------------------------------------------------------------------
+
+
+
+# ------------------------------------------------------------------------------
+$OutputDir = "$PSScriptRoot\Reports"
+$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
+$ComputerName = $env:COMPUTERNAME
+$OutputFN = "$OutputDir\$Timestamp-$ComputerName-disk.csv"
+$AppsFN = "$PSScriptRoot\apps.csv"
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+$windowsDir = $env:windir
+$systemDriveLetter = [System.IO.Path]::GetPathRoot($windowsDir)
+$systemDriveLetter = $systemDriveLetter.TrimEnd('\')
+Write-Output "The system drive letter is: $systemDriveLetter"
+# ------------------------------------------------------------------------------
+
 
 
 # Define default install paths for common web services
 $DefaultPaths = @(
-    "C:\inetpub\wwwroot",              # IIS
-    "C:\nginx",                        # NGINX
-    "C:\Apache24",                     # Apache
-    "C:\Program Files\PostgreSQL",    # PostgreSQL
-    "C:\Program Files\MySQL",         # MySQL
-    "C:\Program Files\MariaDB",       # MariaDB
-    "C:\Program Files\nodejs",        # NodeJS
-    "$env:APPDATA\npm"                # NPM
+
 )
 
 # Create output directory if it doesn't exist
@@ -148,7 +191,7 @@ If (-Not (Test-Path $BackupConfigPath)) {
 
 
 # === User Preferred Configuration ===
-
+<#
 $PreferredProtocols = @("TLS 1.3", "TLS 1.2")  # Ordered list of preferred protocols
 $PreferredCipherSuites = @(
     "TLS_AES_256_GCM_SHA384",
@@ -158,20 +201,7 @@ $PreferredCipherSuites = @(
     "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
 )  # Ordered list of preferred cipher suites
 
-
-# === User Preferred TLS Configuration ===
-
-$UserPreferredProtocols = @("TLS 1.3", "TLS 1.2")
-$UserPreferredCiphers = @(
-    "TLS_AES_256_GCM_SHA384",
-    "TLS_AES_128_GCM_SHA256",
-    "TLS_CHACHA20_POLY1305_SHA256",
-    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-)
-
-Write-Host "Preferred TLS protocols: $($UserPreferredProtocols -join ', ')"
-Write-Host "Preferred cipher suites: $($UserPreferredCiphers -join ', ')"
+#>
 
 
 Write-Host "User-defined preferred protocols: $($PreferredProtocols -join ', ')"
@@ -184,10 +214,10 @@ Write-Host "Running in DRY RUN mode. No changes will be made unless -Remediate i
 
 # Unified TLS Configuration Scanner for Windows Systems and Application Configs
 
-$Protocols = @("SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3")
+# $Protocols = @("SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3")
 $BaseKey = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"
-$FileExtensions = "*.conf", "*.xml", "*.properties", "*.json", "*.yml", "*.ini", "*.cfg", "*.bat", "*.sh"
-$Keywords = @("tls", "ssl", "keystore", "truststore", "cipher", "protocol", "javax.net", "https.port", "server.ssl.", "jdk.tls", "enabledProtocols", "cipherSuites", "useStartTLS", "sslSocketFactory", "securityProtocol")
+# $FileExtensions = "*.conf", "*.xml", "*.properties", "*.json", "*.yml", "*.ini", "*.cfg", "*.bat", "*.sh"
+# $Keywords = @("tls", "ssl", "keystore", "truststore", "cipher", "protocol", "javax.net", "https.port", "server.ssl.", "jdk.tls", "enabledProtocols", "cipherSuites", "useStartTLS", "sslSocketFactory", "securityProtocol")
 
 $Drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -gt 0 }
 $Results = @()
@@ -359,6 +389,7 @@ Function Remediate-ConfigFile {
     } | Set-Content $FilePath -Encoding UTF8
 }
 
+<#
 Function Describe-RemediationReason {
     Param ([string]$Setting)
 
@@ -374,6 +405,9 @@ Function Describe-RemediationReason {
         default {"This setting is insecure or outdated based on modern security standards."}
     }
 }
+#>
+
+
 
 # Apply automatic remediation based on previous results
 foreach ($Result in $Results) {
@@ -425,14 +459,15 @@ param (
     [string]$OutputPath = ".\TlsAuditReport.csv"
 )
 
+<#
 $FilePatterns = "*.conf", "*.ini", "*.env", "*.json", "*.yaml", "*.yml", "*.cnf"
 $TLSKeywords = @("ssl", "tls", "cipher", "protocol", "cert", "key", "ca", "dhparam")
 
 $WeakCiphers = @("RC4", "3DES", "NULL", "EXPORT", "DES", "MD5", "TLS_DH_anon", "TLS_RSA_WITH_RC4", "TLS_RSA_WITH_3DES")
-
+#>
 $Results = @()
 
-
+<#
 Function Detect-Technology {
     param([string]$FilePath)
 
@@ -453,7 +488,7 @@ Function Detect-Technology {
     }
 }
 
-
+#>
 
 
 $Drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -gt 0 }
@@ -486,3 +521,8 @@ $Results | Export-Csv -Path $OutputPath -NoTypeInformation -Encoding UTF8
 
 Write-Host "Scan complete. Results saved to: $OutputPath"
 
+# Reference URLs for HSTS & TLS configuration:
+# - HSTS: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+# - NGINX HSTS: https://nginx.org/en/docs/http/ngx_http_headers_module.html
+# - Apache HSTS: https://httpd.apache.org/docs/2.4/mod/mod_headers.html
+# - Node/Express HSTS: https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
