@@ -1,528 +1,249 @@
-<#
-.SYNOPSIS
-  Scans registry and config files for TLS/SSL and HSTS settings and provides remediation recommendations.
-
-.DESCRIPTION
-  This script checks:
-    - Windows SCHANNEL registry settings
-    - Application config files for TLS protocols and cipher suites
-    - HSTS headers in web server configs
-    - Provides remediation output with references for NGINX, Apache, and Node.js
-
-.OUTPUT
-  A CSV report containing all findings and recommendations.
-
-.REFERENCE
-  - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
-  - https://nginx.org/en/docs/http/ngx_http_headers_module.html
-  - https://httpd.apache.org/docs/2.4/mod/mod_headers.html
-  - https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
-#>
-
-# ------------------------------------------------------------------------------
-Function Load-JsonConfig {
-    [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory = $True)]
-        [String]$FilePath
-    )
-
-    If (-Not (Test-Path -Path $FilePath)) {
-        Throw "File '$FilePath' does not exist."
-    }
-
-    $JsonContent = Get-Content -Path $FilePath -Raw
-    $ConfigObject = ConvertFrom-Json -InputObject $JsonContent
-    Return $ConfigObject
-}
-# ------------------------------------------------------------------------------
-# ------------------------------------------------------------------------------
-Function Save-JsonConfig {
-    [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory = $True)]
-        [Object]$ConfigObject,
-
-        [Parameter(Mandatory = $True)]
-        [String]$FilePath
-    )
-
-    $JsonContent = ConvertTo-Json -InputObject $ConfigObject -Depth 5
-    Set-Content -Path $FilePath -Value $JsonContent -Encoding UTF8
-}
-# ------------------------------------------------------------------------------
-
-
-
-# ------------------------------------------------------------------------------
-$OutputDir = "$PSScriptRoot\Reports"
-$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
-$ComputerName = $env:COMPUTERNAME
-$OutputFN = "$OutputDir\$Timestamp-$ComputerName-disk.csv"
-$AppsFN = "$PSScriptRoot\apps.csv"
-# ------------------------------------------------------------------------------
-
-# ------------------------------------------------------------------------------
-$windowsDir = $env:windir
-$systemDriveLetter = [System.IO.Path]::GetPathRoot($windowsDir)
-$systemDriveLetter = $systemDriveLetter.TrimEnd('\')
-Write-Output "The system drive letter is: $systemDriveLetter"
-# ------------------------------------------------------------------------------
-
-
-
-# Define default install paths for common web services
-$DefaultPaths = @(
-
-)
-
-# Create output directory if it doesn't exist
-$OutputFolder = ".\output"
-if (-Not (Test-Path -Path $OutputFolder)) {
-    New-Item -ItemType Directory -Path $OutputFolder | Out-Null
-}
-
-$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
-$ComputerName = $env:COMPUTERNAME
-$OutputFilePrefix = "$OutputFolder\$Timestamp" + "_$ComputerName"
-
-# Initialize a timer for saving every minute
-$LastSave = Get-Date
-
-# Collect initial scan results from default paths
-$InitialResults = foreach ($Path in $DefaultPaths) {
-    if (Test-Path $Path) {
-        Get-ChildItem -Path $Path -Recurse -ErrorAction SilentlyContinue
-    }
-}
-
-$InitialResults | Out-File -FilePath "$OutputFilePrefix`_default_scan.txt"
-
-# Function to periodically save results
-function Save-ResultsPeriodically {
-    param (
-        [System.Collections.ArrayList]$Results,
-        [string]$FilePath
-    )
-    $Now = Get-Date
-    if (($Now - $script:LastSave).TotalSeconds -ge 60) {
-        $Results | Out-File -FilePath $FilePath -Append
-        $script:LastSave = $Now
-    }
-}
-
-
-$OutputFolder = ".\output"
-if (-Not (Test-Path -Path $OutputFolder)) {
-    New-Item -ItemType Directory -Path $OutputFolder | Out-Null
-}
-$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
-$ComputerName = $env:COMPUTERNAME
-
-
-
-Function Get-ConfigRecommendation {
-    Param ([string]$Line)
-
-    if ($Line -match "(?i)(TLSv1|TLSv1\.1)") {
-        return "Deprecated protocol, remove"
-    } elseif ($Line -match "(?i)TLSv1\.2|TLSv1\.3") {
-        return "Acceptable protocol"
-    } elseif ($Line -match "(?i)cipher.*(NULL|RC4|MD5|EXPORT)") {
-        return "Weak cipher, remove"
-    } elseif ($Line -match "(?i)keystore|truststore") {
-        return "Java security config, review"
-    } else {
-        return "Review manually"
-    }
-}
-
-Function Backup-RegistryKey {
-    Param([string]$RegKey)
-    reg export $RegKey $BackupRegistryPath /y | Out-Null
-}
-
-Function Remediate-RegistrySetting {
-    Param (
-        [string]$Protocol
-    )
-
-    $RegPath = "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$Protocol\Server"
-    Backup-RegistryKey -RegKey "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL"
-
-    If (-Not (Test-Path "Registry::$RegPath")) {
-        New-Item -Path "Registry::$RegPath" -Force | Out-Null
-    }
-
-    Set-ItemProperty -Path "Registry::$RegPath" -Name "Enabled" -Value 0 -Type DWord
-    Set-ItemProperty -Path "Registry::$RegPath" -Name "DisabledByDefault" -Value 1 -Type DWord
-}
-
-Function Get-Recommendation {
-    param ([string]$line)
-
-    if ($line -match "(?i)TLSv1|TLSv1\.1|SSL") {
-        return "Deprecated protocol version used"
-    } elseif ($line -match ($WeakCiphers -join "|")) {
-        return "Weak cipher suite used"
-    } elseif ($line -match "TLSv1\.2|TLSv1\.3") {
-        return "Acceptable protocol (prefer TLS 1.3)"
-    } elseif ($line -match "http:" -and $line -notmatch "https:") {
-        return "Insecure HTTP protocol detected"
-    } else {
-        return "Potential TLS config - review required"
-    }
-}
-
 param (
-    [switch]$Remediate = $false
+    [ValidateSet("Normal", "Aggressive")][string]$Mode = "Normal",
+    [switch]$Report,
+    [switch]$Plan,
+    [switch]$Backup,
+    [string]$Remediate,
+    [string]$Backout,
+    [switch]$VerifyBackout
 )
 
 
-$TimeStamp = $(Get-Date -Format 'yyyy-MM-dd-HH-mm-ss')
-$ComputerName = $env:COMPUTERNAME
 
-$BackupRegistryPath = ".\Backup_$ComputerName\Registry_Backup_$TimeStamp.reg"
-$BackupConfigPath = ".\Backup_$ComputerName\ConfigFiles_$TimeStamp"
-
-If (-Not (Test-Path $BackupConfigPath)) {
-    New-Item -ItemType Directory -Path $BackupConfigPath -Force | Out-Null
-}
-
-
-# === User Preferred Configuration ===
-<#
-$PreferredProtocols = @("TLS 1.3", "TLS 1.2")  # Ordered list of preferred protocols
-$PreferredCipherSuites = @(
-    "TLS_AES_256_GCM_SHA384",
-    "TLS_AES_128_GCM_SHA256",
-    "TLS_CHACHA20_POLY1305_SHA256",
-    "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-)  # Ordered list of preferred cipher suites
-
-#>
-
-
-Write-Host "User-defined preferred protocols: $($PreferredProtocols -join ', ')"
-Write-Host "User-defined preferred cipher suites: $($PreferredCipherSuites -join ', ')"
-
-
-Write-Host "Running in DRY RUN mode. No changes will be made unless -Remediate is specified." -ForegroundColor Yellow
-
-
-
-# Unified TLS Configuration Scanner for Windows Systems and Application Configs
-
-# $Protocols = @("SSL 2.0", "SSL 3.0", "TLS 1.0", "TLS 1.1", "TLS 1.2", "TLS 1.3")
-$BaseKey = "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols"
-# $FileExtensions = "*.conf", "*.xml", "*.properties", "*.json", "*.yml", "*.ini", "*.cfg", "*.bat", "*.sh"
-# $Keywords = @("tls", "ssl", "keystore", "truststore", "cipher", "protocol", "javax.net", "https.port", "server.ssl.", "jdk.tls", "enabledProtocols", "cipherSuites", "useStartTLS", "sslSocketFactory", "securityProtocol")
-
-$Drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -gt 0 }
-$Results = @()
-
-Function Get-TlsRegistryStatus {
-    Param ([string]$Protocol)
-
-    $ClientPath = "$BaseKey\$Protocol\Client"
-    $ServerPath = "$BaseKey\$Protocol\Server"
-
-    $ClientEnabled = Get-ItemProperty -Path $ClientPath -Name "Enabled" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Enabled -ErrorAction SilentlyContinue
-    $ServerEnabled = Get-ItemProperty -Path $ServerPath -Name "Enabled" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Enabled -ErrorAction SilentlyContinue
-
-    $ClientState = if ($ClientEnabled -eq $null) { "Not Set" } elseif ($ClientEnabled -eq 0) { "Disabled" } elseif ($ClientEnabled -eq 1) { "Enabled" } else { "Unknown" }
-    $ServerState = if ($ServerEnabled -eq $null) { "Not Set" } elseif ($ServerEnabled -eq 0) { "Disabled" } elseif ($ServerEnabled -eq 1) { "Enabled" } else { "Unknown" }
-
-    $Recommendation = switch ($Protocol) {
-        "SSL 2.0" {"Disable immediately"}
-        "SSL 3.0" {"Disable immediately"}
-        "TLS 1.0" {"Deprecated, disable if possible"}
-        "TLS 1.1" {"Deprecated, disable if possible"}
-        "TLS 1.2" {"Enable if not already"}
-        "TLS 1.3" {"Enable if application supports it"}
-        default   {"Review manually"}
+function Log-Verbose {
+    param([string]$Message)
+    if ($VerbosePreference -eq 'Continue') {
+        Write-Host "[VERBOSE] $Message" -ForegroundColor Cyan
     }
-
-    $Compatible = if ($Protocol -eq "TLS 1.3") { "Application support required" } else { "Likely supported" }
-
-    [PSCustomObject]@{
-                            Technology = Detect-Technology -FilePath $Path
-        Source        = "Registry"
-        Location      = "SCHANNEL $Protocol"
-        Setting       = "$Protocol"
-        ClientStatus  = $ClientState
-        ServerStatus  = $ServerState
-        Recommendation = $Recommendation
-        TLS13Compatible = $Compatible
-    }
+    Add-Content -Path "$PSScriptRoot\Output\script.log" -Value "$(Get-Date -Format "yyyy-MM-dd HH:mm:ss") [VERBOSE] $Message"
 }
 
 
 
-Function Scan-Filesystem {
-    foreach ($Drive in $Drives) {
-        Get-ChildItem -Path $Drive.Root -Recurse -Include $FileExtensions -ErrorAction SilentlyContinue |
-        Where-Object { -Not $_.PSIsContainer } |
-        ForEach-Object {
-            $Path = $_.FullName
-            try {
-                $Lines = Get-Content $Path -ErrorAction SilentlyContinue
-                for ($i = 0; $i -lt $Lines.Count; $i++) {
-                    $Line = $Lines[$i]
-                    if ($Keywords | Where-Object { $Line -match $_ }) {
-                        $Results += [PSCustomObject]@{
-                            Technology = Detect-Technology -FilePath $Path
-                            Source         = "File"
-                            Location       = "$Path (Line $($i+1))"
-                            Setting        = $Line.Trim()
-                            ClientStatus   = "-"
-                            ServerStatus   = "-"
-                            Recommendation = Get-ConfigRecommendation -Line $Line
-                            TLS13Compatible = if ($Line -match "TLSv1\.3") { "Yes" } else { "Unknown or No" }
-                        }
-                    }
-                }
-            } catch {}
-        }
-    }
+function Get-OperatingSystem {
+    if ($env:OS -like "*Windows*") { return "Windows" }
+    elseif (Test-Path "/etc/os-release") { return "Linux" }
+    else { return "Unknown" }
 }
 
-Write-Host "Scanning TLS settings in registry and file system..."
-
-# Run registry scan
-foreach ($Protocol in $Protocols) {
-    $Results += Get-TlsRegistryStatus -Protocol $Protocol
-}
-
-# Run filesystem scan
-Scan-Filesystem
-
-# === HSTS Detection ===
-Function Get-HSTSRecommendation {
-    param ([string]$Line)
-
-    if ($Line -match "(?i)Strict-Transport-Security") {
-        if ($Line -match "max-age=\d{1,5}") {
-            return "HSTS max-age too short (recommend 6+ months)"
-        } else {
-            return "HSTS appears configured"
-        }
+function Get-Volumes {
+    if ($env:OS -like "*Windows*") {
+        return Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -gt 0 } | Select-Object -ExpandProperty Root
     } else {
-        return "Missing HSTS header"
+        return @("/", "/mnt", "/opt", "/home")
     }
 }
 
-Function Scan-HSTSHeaders {
-    $HSTSKeywords = @("Strict-Transport-Security", "HSTS")
-    foreach ($Drive in $Drives) {
-        Get-ChildItem -Path $Drive.Root -Recurse -Include $FileExtensions -ErrorAction SilentlyContinue |
-        Where-Object { -Not $_.PSIsContainer } |
-        ForEach-Object {
-            $Path = $_.FullName
-            try {
-                $Lines = Get-Content $Path -ErrorAction SilentlyContinue
-                for ($i = 0; $i -lt $Lines.Count; $i++) {
-                    $Line = $Lines[$i]
-                    if ($HSTSKeywords | Where-Object { $Line -match $_ }) {
-                        $Results += [PSCustomObject]@{
-                            Technology = Detect-Technology -FilePath $Path
-                            Source         = "File"
-                            Location       = "$Path (Line $($i+1))"
-                            Setting        = $Line.Trim()
-                            ClientStatus   = "-"
-                            ServerStatus   = "-"
-                            Recommendation = Get-HSTSRecommendation -Line $Line
-                            TLS13Compatible = "-"
+function Load-Settings {
+    return Get-Content "$PSScriptRoot/settings.json" -Raw | ConvertFrom-Json
+}
+
+function Log-Action {
+    param($Message)
+    $TimeStamp = Get-Date -Format o
+    $LogFile = "$PSScriptRoot/security_scan.log"
+    "$TimeStamp [$env:COMPUTERNAME] [$env:USERNAME] $Message" | Out-File -Append $LogFile
+}
+
+function Search-Applications {
+    param ($Settings, $Mode, $OsType, $Volumes)
+    $Discovered = @()
+    $NotDiscovered = @()
+    $Apps = $Settings.OS[$OsType].Apps
+
+    foreach ($App in $Apps) {
+        $Found = $false
+        if ($Mode -eq "Normal") {
+            $Paths = @($App.InstallPath) + @($App.ConfigPath)
+            foreach ($Vol in $Volumes) {
+                foreach ($Path in $Paths) {
+                    if ($null -ne $Path -and $Path -ne "") {
+                        $Expanded = $Path -replace "%VOLUME%", $Vol
+                        if (Test-Path $Expanded) {
+                            $Found = $true
                         }
                     }
                 }
-            } catch {}
+            }
+        } elseif ($Mode -eq "Aggressive") {
+            foreach ($Vol in $Volumes) {
+                Get-ChildItem -Path $Vol -Recurse -Include *.conf,*.xml,*.ini -ErrorAction SilentlyContinue | ForEach-Object {
+                    foreach ($Keyword in $App.Keywords) {
+                        if ((Get-Content $_.FullName -ErrorAction SilentlyContinue | Select-String -Pattern $Keyword)) {
+                            $Found = $true
+                        }
+                    }
+                }
+            }
         }
-    }
-}
-
-Write-Host "Scanning HSTS headers in configuration files..."
-Scan-HSTSHeaders
-
-
-# Output results
-$OutputPath = ".\TLS_Config_Audit_Report.csv"
-$Results | Export-Csv -Path $OutputPath -NoTypeInformation -Encoding UTF8
-
-Write-Host "Scan complete. Report saved to: $OutputPath"
-
-
-
-
-# === BEGIN REMEDIATION SECTION ===
-
-# Backup paths
-$BackupRegistryPath = ".\Registry_Backup.reg"
-$BackupConfigPath = ".\ConfigFile_Backups"
-
-# Create backup folder for configs
-If (-Not (Test-Path $BackupConfigPath)) {
-    New-Item -ItemType Directory -Path $BackupConfigPath | Out-Null
-}
-
-
-
-
-
-Function Remediate-ConfigFile {
-    Param (
-        [string]$FilePath,
-        [string]$LineToReplace,
-        [string]$Replacement
-    )
-
-    $FileName = Split-Path -Path $FilePath -Leaf
-    Copy-Item -Path $FilePath -Destination "$BackupConfigPath\$FileName.bak" -Force
-
-    (Get-Content $FilePath) | ForEach-Object {
-        if ($_ -match [regex]::Escape($LineToReplace)) {
-            $_ -replace [regex]::Escape($LineToReplace), $Replacement
+        if ($Found) {
+            $Discovered += New-Object PSObject -Property @{
+                App       = $App.FriendlyName
+                OS        = $OsType
+                Status    = "Found"
+                TLS       = $App.Recommendations.TLS
+                HSTS      = $App.Recommendations.HSTS
+            }
         } else {
-            $_
+            $NotDiscovered += New-Object PSObject -Property @{
+                App    = $App.FriendlyName
+                OS     = $OsType
+                Status = "Missing"
+            }
         }
-    } | Set-Content $FilePath -Encoding UTF8
+    }
+    return @{ Discovered = $Discovered; NotDiscovered = $NotDiscovered }
 }
 
-<#
-Function Describe-RemediationReason {
-    Param ([string]$Setting)
 
-    switch -Wildcard ($Setting) {
-        "*SSL 2.0*" {"SSL 2.0 is deprecated due to known vulnerabilities including POODLE. Source: NIST SP 800-52r2"}
-        "*SSL 3.0*" {"SSL 3.0 is deprecated due to POODLE attack vulnerability. Source: NIST SP 800-52r2"}
-        "*TLS 1.0*" {"TLS 1.0 is no longer considered secure. Source: PCI-DSS v3.2.1, Microsoft TLS deprecation notice"}
-        "*TLS 1.1*" {"TLS 1.1 is deprecated in major browsers and systems. Source: IETF RFC 8996"}
-        "*RC4*" {"RC4 cipher is weak and vulnerable to multiple attacks. Source: RFC 7465"}
-        "*3DES*" {"3DES provides only 112-bit security and is considered weak. Source: NIST SP 800-57"}
-        "*NULL*" {"NULL cipher provides no encryption. Source: OWASP TLS Guidelines"}
-        "*EXPORT*" {"EXPORT ciphers are insecure legacy options. Source: IETF TLS working group"}
-        default {"This setting is insecure or outdated based on modern security standards."}
-    }
-}
-#>
+function Export-Report {
+    param ($Results, $OutputDir)
+    
+$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
+$ComputerName = $env:COMPUTERNAME
+if (-not $ComputerName) { $ComputerName = $(hostname) }
 
-
-
-# Apply automatic remediation based on previous results
-foreach ($Result in $Results) {
-    if ($Result.Source -eq "Registry" -and $Result.Recommendation -match "Disable") {
-        if ($Remediate -and $UserPreferredProtocols -contains $Result.Setting) { Remediate-RegistrySetting -Protocol $Result.Setting } else { Write-Host "Would remediate registry setting: $($Result.Setting)" }
-        $Reason = Describe-RemediationReason -Setting $Result.Setting
-        Write-Host "Registry protocol $($Result.Setting) remediated. Reason: $Reason"
-    }
-    elseif ($Result.Source -eq "File" -and $Result.Recommendation -match "remove") {
-        $Line = $Result.Setting
-        $FilePath = ($Result.Location -split " \(Line")[0]
-        $Replacement = "# REMOVED INSECURE SETTING: $Line"
-        if ($Remediate) { Remediate-ConfigFile -FilePath $FilePath -LineToReplace $Line -Replacement $Replacement } else { Write-Host "Would remediate config file: $FilePath by replacing: $Line" }
-        $Reason = Describe-RemediationReason -Setting $Line
-        Write-Host "Config file $FilePath remediated. Reason: $Reason"
-    }
-}
-# === END REMEDIATION SECTION ===
-
-
-# --- Additional Config Scanner from Universal Engine ---
-
-
-<#
-.SYNOPSIS
-  Scans common application config files for TLS/SSL settings and weak ciphers.
-
-.DESCRIPTION
-  This engine checks for TLS-related settings in config files from services like:
-    - NGINX
-    - PostgreSQL
-    - MySQL / MariaDB
-    - Node.js / Express
-    - Python / Django / Flask
-    - SMTP servers (Postfix, Dovecot)
-    - Docker/Kubernetes mounted configs
-    - VPN software (OpenVPN, WireGuard)
-
-  It reports file, line, setting, and recommended action. Results saved as CSV.
-
-.PARAMETER OutputPath
-  The path to the CSV file where results will be saved.
-
-.EXAMPLE
-  .\Universal-TLS-Engine-Scanner.ps1 -OutputPath .\TlsAuditReport.csv
-#>
-
-param (
-    [string]$OutputPath = ".\TlsAuditReport.csv"
-)
-
-<#
-$FilePatterns = "*.conf", "*.ini", "*.env", "*.json", "*.yaml", "*.yml", "*.cnf"
-$TLSKeywords = @("ssl", "tls", "cipher", "protocol", "cert", "key", "ca", "dhparam")
-
-$WeakCiphers = @("RC4", "3DES", "NULL", "EXPORT", "DES", "MD5", "TLS_DH_anon", "TLS_RSA_WITH_RC4", "TLS_RSA_WITH_3DES")
-#>
-$Results = @()
-
-<#
-Function Detect-Technology {
-    param([string]$FilePath)
-
-    switch -Regex ($FilePath) {
-        "nginx.*\.conf"             { return "NGINX" }
-        "postgres.*\.conf"          { return "PostgreSQL" }
-        "my\.cnf|my\.ini"           { return "MySQL / MariaDB" }
-        "node.*\.js|express.*\.js"  { return "Node.js / Express" }
-        "flask|django|python.*\.py" { return "Python / Django / Flask" }
-        "postfix|dovecot"           { return "SMTP (Postfix/Dovecot)" }
-        "docker|k8s|kube|compose"   { return "Docker/Kubernetes" }
-        "openvpn|wg0|wireguard"     { return "VPN (OpenVPN/WireGuard)" }
-        "httpd\.conf|apache2"       { return "Apache Web" }
-        "server\.xml|tomcat"        { return "Apache Tomcat" }
-        "java\.security|cacerts"    { return "Java" }
-        "system32|schannel|reg"     { return "Windows Operating System" }
-        default                     { return "Unknown or Custom" }
-    }
+    $ReportFile = Join-Path $OutputDir "$Timestamp-$ComputerName-report.csv"
+    $Results.Discovered + $Results.NotDiscovered | Export-Csv -Path $ReportFile -NoTypeInformation
+    Log-Action "Report generated at $ReportFile"
 }
 
-#>
 
 
-$Drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Free -gt 0 }
+function Export-Plan {
+    param ($Results, $OutputDir)
+    
+$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
+$ComputerName = $env:COMPUTERNAME
+if (-not $ComputerName) { $ComputerName = $(hostname) }
 
-foreach ($Drive in $Drives) {
-    Get-ChildItem -Path $Drive.Root -Recurse -Include $FilePatterns -ErrorAction SilentlyContinue |
-        Where-Object { -not $_.PSIsContainer } |
-        ForEach-Object {
-            $Path = $_.FullName
-            try {
-                $Lines = Get-Content $Path -ErrorAction SilentlyContinue
-                for ($i = 0; $i -lt $Lines.Count; $i++) {
-                    $Line = $Lines[$i]
-                    if ($TLSKeywords | Where-Object { $Line -match $_ }) {
-                        $Results += [PSCustomObject]@{
-                            Technology = Detect-Technology -FilePath $Path
-                            File         = $Path
-                            LineNumber   = $i + 1
-                            Line         = $Line.Trim()
-                            Recommendation = Get-Recommendation -line $Line
-                        }
-                    }
+    $PlanFile = Join-Path $OutputDir "$Timestamp-$ComputerName-plan.json"
+    $Results.Discovered | ConvertTo-Json -Depth 5 | Out-File $PlanFile
+    Log-Action "Plan created at $PlanFile"
+    return $PlanFile
+}
+
+
+
+function Perform-Backup {
+    param ($PlanFile, $OutputDir)
+    
+$Timestamp = Get-Date -Format "yyyy-MM-dd-HH-mm-ss"
+$ComputerName = $env:COMPUTERNAME
+if (-not $ComputerName) { $ComputerName = $(hostname) }
+
+    $ZipFile = Join-Path $OutputDir "$Timestamp-$ComputerName-backup.zip"
+    Compress-Archive -Path $PlanFile, "$OutputDir\*.csv" -DestinationPath $ZipFile -Force
+    Log-Action "Backup created at $ZipFile"
+    return $ZipFile
+}
+
+
+function Remediate-System {
+    param ($PlanFile)
+    $Plan = Get-Content $PlanFile | ConvertFrom-Json
+    foreach ($App in $Plan) {
+        Log-Action "Remediating $($App.App)..."
+        foreach ($Path in $App.ConfigPath) {
+            if ($env:OS -like "*Windows*" -and $Path -like 'HKLM:*') {
+                $BackupPath = "$PSScriptRoot/registry-backup-$($App.App.Replace(' ','_')).reg"
+                reg export $Path $BackupPath /y | Out-Null
+                Set-ItemProperty -Path $Path -Name "Enabled" -Value 0 -Type DWord -Force -ErrorAction SilentlyContinue
+            } elseif (Test-Path $Path) {
+                $Content = Get-Content $Path -Raw
+                if ($Content -notmatch "Strict-Transport-Security") {
+                    Add-Content -Path $Path -Value "`n# Enforce HSTS`nadd_header Strict-Transport-Security "max-age=31536000; includeSubDomains";"
                 }
-            } catch { }
+            }
         }
+    }
+    Log-Action "Remediation completed"
 }
 
-$Results | Format-Table -AutoSize
-$Results | Export-Csv -Path $OutputPath -NoTypeInformation -Encoding UTF8
+function Backout-System {
+    param ($BackupZip)
+    $Temp = Join-Path $env:TEMP "Restore_$(Get-Random)"
+    Expand-Archive -Path $BackupZip -DestinationPath $Temp -Force
+    Log-Action "Restoring from backup $BackupZip"
+    Get-ChildItem -Path $Temp -Filter *.reg | ForEach-Object {
+        reg import $_.FullName | Out-Null
+        Log-Action "Restored registry from $($_.Name)"
+    }
+    Log-Action "Backout completed"
+}
 
-Write-Host "Scan complete. Results saved to: $OutputPath"
 
-# Reference URLs for HSTS & TLS configuration:
-# - HSTS: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
-# - NGINX HSTS: https://nginx.org/en/docs/http/ngx_http_headers_module.html
-# - Apache HSTS: https://httpd.apache.org/docs/2.4/mod/mod_headers.html
-# - Node/Express HSTS: https://expressjs.com/en/advanced/best-practice-security.html#use-helmet
+
+
+
+
+function Generate-BackoutVerificationReport {
+    param ($BackupZip)
+    $TempPath = Join-Path $env:TEMP "Verify_$(Get-Random)"
+    Expand-Archive -Path $BackupZip -DestinationPath $TempPath -Force
+    $Report = @()
+    $TimeStamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    $ReportPath = "$PSScriptRoot/Output/$env:COMPUTERNAME-backout-verify-$TimeStamp.csv"
+
+    Get-ChildItem -Path $TempPath -Filter *.reg | ForEach-Object {
+        $BaseName = $_.BaseName -replace "registry-backup-", ""
+        $AppName = $BaseName -replace "_", " "
+        $RegPathLine = ($_ | Get-Content | Select-String -Pattern '\[.*\]' | Select-Object -First 1).ToString()
+        $RegKeyPath = $RegPathLine -replace '[\[\]]', ''
+        $KeyStatus = if (Test-Path "Registry::$RegKeyPath") { 'Restored' } else { 'Missing' }
+
+        $ValueStatus = 'N/A'
+        if ($KeyStatus -eq 'Restored') {
+            try {
+                $KeyProps = Get-ItemProperty -Path "Registry::$RegKeyPath" -ErrorAction Stop
+                if (($KeyProps | Get-Member -Name 'Enabled')) {
+                    $ValueStatus = if ($KeyProps.Enabled -eq 0) { 'Correct' } else { 'Incorrect' }
+                } else {
+                    $ValueStatus = 'Missing Value'
+                }
+            } catch {
+                $ValueStatus = 'Error Reading Key'
+            }
+        }
+
+        $Report += New-Object PSObject -Property @{
+            Application       = $AppName
+            RegistryBackup    = $_.Name
+            RegistryKey       = $RegKeyPath
+            RegistryRestored  = $KeyStatus
+            EnabledValue      = $ValueStatus
+            Status            = 'Backup Exists'
+        }
+    }
+
+    $Report | Export-Csv -Path $ReportPath -NoTypeInformation
+    Log-Action "Backout verification report generated at $ReportPath"
+}
+
+$OsType = Get-OperatingSystem
+$Volumes = Get-Volumes
+$Settings = Load-Settings
+$OutputDir = "$PSScriptRoot\Output"
+if (!(Test-Path $OutputDir)) { New-Item -ItemType Directory -Path $OutputDir | Out-Null }
+
+if ($Remediate) {
+    Remediate-System -planFile $Remediate
+} elseif ($Backout) {
+    Backout-System -backupZip $Backout
+} elseif ($VerifyBackout) {
+    $LatestBackup = Get-ChildItem "$OutputDir" -Filter "*-backup.zip" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($null -ne $LatestBackup) {
+        Generate-BackoutVerificationReport -BackupZip $LatestBackup.FullName
+    } else {
+        Write-Host "No backup ZIP found for verification." -ForegroundColor Yellow
+    }
+} else {
+    $Results = Search-Applications -Settings $Settings -Mode $Mode -OsType $OsType -Volumes $Volumes
+    if ($Report) { Export-Report -Results $Results -OutputDir $OutputDir }
+    if ($Plan) { $PlanFile = Export-Plan -Results $Results -OutputDir $OutputDir }
+    if ($Backup) {
+        $PlanFile = Export-Plan -Results $Results -OutputDir $OutputDir
+        Export-Report -Results $Results -OutputDir $OutputDir
+        Perform-Backup -PlanFile $PlanFile -OutputDir $OutputDir
+    }
+}

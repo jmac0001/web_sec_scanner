@@ -1,2006 +1,2591 @@
 {
-    "Apps": [
-    {
-      "InstallPath": "%SYSDISK%\\inetpub\\wwwroot",
-      "Name": "IIS",
-      "Ports": "80;443",
-      "Detection": {
-        "system32|schannel|reg": "Windows Operating System"
-      }
-    },
-    {
-      "InstallPath": "%SYSDISK%\\nginx",
-      "Name": "NGINX",
-      "Ports": "80;443",
-      "Detection": {
-        "nginx.*\\.conf": "NGINX"
-      }
-    },
-    {
-      "InstallPath": "%SYSDISK%\\Apache24",
-      "Name": "Apache",
-      "Ports": "80;443",
-      "Detection": {
-        "httpd\\.conf|apache2": "Apache Web"
-      }
-    },
-    {
-      "InstallPath": "%SYSDISK%\\Program Files\\PostgreSQL",
-      "Name": "PostgreSQL",
-      "Ports": "5432",
-      "Detection": {
-        "postgres.*\\.conf": "PostgreSQL"
-      }
-    },
-    {
-      "InstallPath": "%SYSDISK%\\Program Files\\MySQL",
-      "Name": "MySQL",
-      "Ports": "3306",
-      "Detection": {
-        "my\\.cnf|my\\.ini": "MySQL / MariaDB"
-      }
-    },
-    {
-      "InstallPath": "%SYSDISK%\\Program Files\\MariaDB",
-      "Name": "MariaDB",
-      "Ports": "3306",
-      "Detection": {
-        "my\\.cnf|my\\.ini": "MySQL / MariaDB"
-      }
-    },
-    {
-      "InstallPath": "%SYSDISK%\\Program Files\\nodejs",
-      "Name": "NodeJS",
-      "Ports": "3000",
-      "Detection": {
-        "node.*\\.js|express.*\\.js": "Node.js / Express"
-      }
-    },
-    {
-      "InstallPath": "%APPDATA%\\npm",
-      "Name": "NPM",
-      "Ports": "4873",
-      "Detection": {
-        "node.*\\.js|express.*\\.js": "Node.js / Express"
-      }
-    },
-    {
-      "Name": "Python / Django / Flask",
-      "InstallPath": "",
-      "Ports": "",
-      "Detection": {
-        "flask|django|python.*\\.py": "Python / Django / Flask"
-      }
-    },
-    {
-      "Name": "SMTP (Postfix/Dovecot)",
-      "InstallPath": "",
-      "Ports": "",
-      "Detection": {
-        "postfix|dovecot": "SMTP (Postfix/Dovecot)"
-      }
-    },
-    {
-      "Name": "Docker/Kubernetes",
-      "InstallPath": "",
-      "Ports": "",
-      "Detection": {
-        "docker|k8s|kube|compose": "Docker/Kubernetes"
-      }
-    },
-    {
-      "Name": "VPN (OpenVPN/WireGuard)",
-      "InstallPath": "",
-      "Ports": "",
-      "Detection": {
-        "openvpn|wg0|wireguard": "VPN (OpenVPN/WireGuard)"
-      }
-    },
-    {
-      "Name": "Apache Tomcat",
-      "InstallPath": "",
-      "Ports": "",
-      "Detection": {
-        "server\\.xml|tomcat": "Apache Tomcat"
-      }
-    },
-    {
-      "Name": "Java",
-      "InstallPath": "",
-      "Ports": "",
-      "Detection": {
-        "java\\.security|cacerts": "Java"
-      }
-    },
-    {
-      "Name": "Unknown or Custom",
-      "InstallPath": "",
-      "Ports": "",
-      "Detection": {
-        "default": "Unknown or Custom"
-      }
-    },
-    {
-      "Name": "OpenSSL",
-      "InstallPath": "/usr/bin/openssl",
-      "Ports": "",
-      "Detection": {
-        "openssl.*": "OpenSSL"
-      }
-    },
-    {
-      "Name": "Java",
-      "InstallPath": "/usr/lib/jvm",
-      "Ports": "",
-      "Detection": {
-        "java\\.security|cacerts": "Java"
-      }
-    },
-    {
-      "Name": "Python",
-      "InstallPath": "/usr/bin/python",
-      "Ports": "",
-      "Detection": {
-        "flask|django|python.*\\.py": "Python / Django / Flask"
-      }
-    },
-    {
-      "Name": "Tomcat",
-      "InstallPath": "/opt/tomcat",
-      "Ports": "8080",
-      "Detection": {
-        "server\\.xml|tomcat": "Apache Tomcat"
-      }
-    },
-    {
-      "Name": "Docker",
-      "InstallPath": "/usr/bin/docker",
-      "Ports": "",
-      "Detection": {
-        "docker|k8s|kube|compose": "Docker/Kubernetes"
-      }
-    },
-    {
-      "Name": "Postfix",
-      "InstallPath": "/etc/postfix",
-      "Ports": "25, 465, 587",
-      "Detection": {
-        "postfix|dovecot": "SMTP (Postfix/Dovecot)"
-      }
-    },
-    {
-      "Name": "OpenVPN",
-      "InstallPath": "/etc/openvpn",
-      "Ports": "1194",
-      "Detection": {
-        "openvpn|wg0|wireguard": "VPN (OpenVPN/WireGuard)"
-      }
-    }
-  ],
-  "TargetAddresses": [
-    "192.168.1.201",
-    "192.168.1.202",
-    "192.168.1.203",
-    "192.168.1.204",
-    "192.168.1.205"
-  ],
-  "Extensions": [
-    "*.conf",
-    "*.xml",
-    "*.properties",
-    "*.json",
-    "*.yml",
-    "*.ini",
-    "*.cfg",
-    "*.bat",
-    "*.sh"
-  ],
-  "Keywords": [
-    "tls",
-    "ssl",
-    "keystore",
-    "truststore",
-    "cipher",
-    "protocol",
-    "javax.net",
-    "https.port",
-    "server.ssl.",
-    "jdk.tls",
-    "enabledProtocols",
-    "cipherSuites",
-    "useStartTLS",
-    "sslSocketFactory",
-    "securityProtocol"
-  ],
-  "Protocols": [
-    {
-      "protocol": "Tls13",
-      "remediation_reason": "This setting is insecure or outdated based on modern security standards.",
-      "risk": "medium"
-    },
-    {
-      "protocol": "Tls12",
-      "remediation_reason": "This setting is insecure or outdated based on modern security standards.",
-      "risk": "medium"
-    },
-    {
-      "protocol": "TLS 1.3",
-      "remediation_reason": "preferred",
-      "reason": "TLS 1.3 is the most secure and modern protocol. Source: IETF RFC 8446",
-      "risk": "low"
-    },
-    {
-      "protocol": "TLS 1.2",
-      "remediation_reason": "preferred",
-      "reason": "TLS 1.2 is widely supported and secure when configured properly. Source: NIST SP 800-52r2",
-      "risk": "low"
-    },
-    {
-      "protocol": "SSL 2.0",
-      "remediation_reason": "deprecated",
-      "reason": "SSL 2.0 is deprecated due to multiple vulnerabilities including POODLE. Source: NIST SP 800-52r2",
-      "risk": "high"
-    },
-    {
-      "protocol": "SSL 3.0",
-      "remediation_reason": "deprecated",
-      "reason": "SSL 3.0 is deprecated due to POODLE vulnerability. Source: NIST SP 800-52r2",
-      "risk": "high"
-    },
-    {
-      "protocol": "TLS 1.0",
-      "remediation_reason": "deprecated",
-      "reason": "TLS 1.0 is considered insecure. Deprecated by PCI-DSS v3.2.1 and major browsers. Source: Microsoft TLS deprecation notice",
-      "risk": "high"
-    },
-    {
-      "protocol": "TLS 1.1",
-      "remediation_reason": "deprecated",
-      "reason": "TLS 1.1 is deprecated due to weak cryptographic design. Source: IETF RFC 8996",
-      "risk": "high"
-    }
-  ],
-  "CipherSuites": [
-    {
-      "cipher": "TLS_AES_256_GCM_SHA384",
-      "reason": "Strong AEAD cipher for TLS 1.3. Recommended in RFC 8446.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_AES_128_GCM_SHA256",
-      "reason": "Efficient AEAD cipher for TLS 1.3. Recommended in RFC 8446.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_CHACHA20_POLY1305_SHA256",
-      "reason": "AEAD cipher for TLS 1.3, optimized for software implementations. Recommended in RFC 8446.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
-      "reason": "Secure and provides forward secrecy. Recommended in RFC 7525.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
-      "reason": "Strong encryption and forward secrecy. Recommended in RFC 7525.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-      "reason": "Balanced performance and security with forward secrecy. Mozilla SSL config recommendation.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
-      "reason": "Provides forward secrecy and strong encryption. Mozilla SSL config recommendation.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_128_CBC_SHA",
-      "reason": "Does not provide forward secrecy and is vulnerable to BEAST and Lucky13. Deprecated in RFC 7525.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_256_CBC_SHA",
-      "reason": "Lacks forward secrecy and is vulnerable to known attacks. Deprecated in RFC 7525.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Weak encryption and vulnerable to SWEET32. Deprecated in RFC 7525.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_RC4_128_SHA",
-      "reason": "RC4 is insecure and prohibited. Deprecated in RFC 7465.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_NULL_SHA",
-      "reason": "NULL cipher provides no encryption. Should never be used. OWASP TLS Guidelines.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_DES_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_NULL_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_NULL_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_DES_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_DES_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_DES_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_EXPORT_WITH_DES40_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_EXPORT_WITH_RC4_40_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_AES_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_DES_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_RC4_128_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_DH_ANON_WITH_SEED_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_NULL_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_NULL_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_ANON_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_ANON_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_ANON_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_ANON_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECDH_ANON_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_GOSTR341112_256_WITH_28147_CNT_IMIT",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_GOSTR341112_256_WITH_KUZNYECHIK_CTR_OMAC",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_GOSTR341112_256_WITH_KUZNYECHIK_MGM_L",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_GOSTR341112_256_WITH_KUZNYECHIK_MGM_S",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_GOSTR341112_256_WITH_MAGMA_CTR_OMAC",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_GOSTR341112_256_WITH_MAGMA_MGM_L",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_GOSTR341112_256_WITH_MAGMA_MGM_S",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_EXPORT_WITH_RC2_CBC_40_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_EXPORT_WITH_RC2_CBC_40_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_EXPORT_WITH_RC4_40_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_EXPORT_WITH_RC4_40_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_3DES_EDE_CBC_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_DES_CBC_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_DES_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_IDEA_CBC_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_RC4_128_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_NULL_WITH_NULL_NULL",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_NULL_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_NULL_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_EXPORT_WITH_DES40_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_EXPORT_WITH_RC4_40_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_NULL_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_NULL_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_NULL_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_RC4_128_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_DES_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_NULL_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_NULL_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_RC4_128_MD5",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_SHA256_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_SHA384_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_SM4_CCM_SM3",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_SM4_GCM_SM3",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "insecure"
-    },
-    {
-      "cipher": "TLS_ECCPWD_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECCPWD_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "recommended"
-    },
-    {
-      "cipher": "TLS_AES_128_CCM_8_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_AES_128_CCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECCPWD_WITH_AES_128_CCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECCPWD_WITH_AES_256_CCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CCM_8_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "secure"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_DSS_WITH_SEED_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_128_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_256_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
-      "reason": "Does not provide adequate security due to lack of AEAD and weak key exchange. Deprecated in RFC 7525.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_128_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_128_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
-      "reason": "Weak forward secrecy, lacks AEAD. Deprecated in RFC 7525.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_256_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_256_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DHE_RSA_WITH_SEED_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_AES_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_DSS_WITH_SEED_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_AES_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_DH_RSA_WITH_SEED_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_PSK_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
-      "reason": "No AEAD; better alternatives exist. RFC 7525 recommends AEAD ciphers.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
-      "reason": "Better alternatives exist with AEAD and stronger security. Deprecated in RFC 7525.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_KRB5_WITH_IDEA_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_DHE_WITH_AES_128_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_DHE_WITH_AES_256_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_128_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_128_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_256_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_256_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_PSK_WITH_CHACHA20_POLY1305_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_AES_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_PSK_WITH_CHACHA20_POLY1305_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_128_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_128_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_256_CCM",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_256_CCM_8",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_AES_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_ARIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_ARIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_ARIA_256_CBC_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_ARIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_IDEA_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_RSA_WITH_SEED_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_DSS_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_DSS_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_DSS_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_RSA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_RSA_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_WITH_3DES_EDE_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_WITH_AES_128_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    },
-    {
-      "cipher": "TLS_SRP_SHA_WITH_AES_256_CBC_SHA",
-      "reason": "Added from external source or legacy configuration. Review required.",
-      "risk": "weak"
-    }
-  ]
-
+    "OS": {
+        "Windows": {
+            "Apps": [
+                {
+                    "InstallPath": "%VOLUME%\\inetpub\\wwwroot",
+                    "Detection": [
+                        "(?i)system32",
+                        "(?i)schannel",
+                        "(?i)reg"
+                    ],
+                    "FriendlyName": "Windows Operating System",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows",
+                        "windows-registry"
+                    ],
+                    "ConfigPath": [
+                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols"
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "(?i)openvpn",
+                        "(?i)wg0",
+                        "(?i)wireguard"
+                    ],
+                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows-registry"
+                    ],
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/etc/openvpn",
+                    "Detection": [
+                        "(?i)openvpn",
+                        "(?i)wg0",
+                        "(?i)wireguard"
+                    ],
+                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows-registry"
+                    ],
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "FriendlyName": "Windows Registry",
+                    "InstallPath": "",
+                    "Detection": [],
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows"
+                    ],
+                    "ConfigPath": [
+                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols",
+                        "HKLM:\\Software\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002"
+                    ]
+                },
+                {
+                    "InstallPath": "%VOLUME%\\inetpub\\wwwroot",
+                    "Detection": [
+                        "(?i)system32",
+                        "(?i)schannel",
+                        "(?i)reg"
+                    ],
+                    "FriendlyName": "Windows Operating System",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows",
+                        "windows-registry"
+                    ],
+                    "ConfigPath": [
+                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols"
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "(?i)openvpn",
+                        "(?i)wg0",
+                        "(?i)wireguard"
+                    ],
+                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows-registry"
+                    ],
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/etc/openvpn",
+                    "Detection": [
+                        "(?i)openvpn",
+                        "(?i)wg0",
+                        "(?i)wireguard"
+                    ],
+                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows-registry"
+                    ],
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "FriendlyName": "Windows Registry",
+                    "InstallPath": "",
+                    "Detection": [],
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "windows"
+                    ],
+                    "ConfigPath": [
+                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols",
+                        "HKLM:\\Software\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002"
+                    ]
+                }
+            ]
+        },
+        "Linux": {
+            "Apps": [
+                {
+                    "InstallPath": [
+                        "(?i)/usr/sbin/nginx",
+                        "(?i)/etc/nginx/",
+                        "(?i)/usr/local/nginx/",
+                        "(?i)/var/www/html/",
+                        "(?i)/var/log/nginx/"
+                    ],
+                    "Detection": [
+                        "nginx.*\\.conf"
+                    ],
+                    "FriendlyName": "NGINX",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "nginx"
+                    ],
+                    "ConfigPath": [
+                        "/etc/nginx/nginx.conf",
+                        "(?i)/etc/nginx/sites\\-available/",
+                        "(?i)/etc/nginx/sites\\-enabled/"
+                    ]
+                },
+                {
+                    "InstallPath": [
+                        "(?i)/usr/sbin/apache2",
+                        "(?i)/etc/apache2/",
+                        "(?i)/var/www/html/",
+                        "(?i)/var/log/apache2/"
+                    ],
+                    "Detection": [
+                        "httpd\\.conf",
+                        "(?i)apache2"
+                    ],
+                    "FriendlyName": "Apache Web",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "apache",
+                        "httpd"
+                    ],
+                    "ConfigPath": [
+                        "/etc/apache2/apache2.conf",
+                        "(?i)/etc/apache2/sites\\-available/",
+                        "(?i)/etc/apache2/sites\\-enabled/"
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "server\\.xml",
+                        "(?i)tomcat"
+                    ],
+                    "FriendlyName": "Apache Tomcat",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "apache",
+                        "tomcat"
+                    ],
+                    "ConfigPath": [
+                        "",
+                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
+                        "/etc/tomcat\\d+/server\\.xml",
+                        "/etc/tomcat\\d+/tomcat-users\\.xml",
+                        "/etc/tomcat\\d+/tomcat\\.conf",
+                        "(?i)/usr/local/tomcat/conf/",
+                        "/usr/share/tomcat\\d+/conf/",
+                        "/var/lib/tomcat\\d+/conf/"
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/opt/tomcat",
+                    "Detection": [
+                        "server\\.xml",
+                        "(?i)tomcat"
+                    ],
+                    "FriendlyName": "Apache Tomcat",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "apache",
+                        "tomcat"
+                    ],
+                    "ConfigPath": [
+                        "",
+                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
+                        "/etc/tomcat\\d+/server\\.xml",
+                        "/etc/tomcat\\d+/tomcat-users\\.xml",
+                        "/etc/tomcat\\d+/tomcat\\.conf",
+                        "(?i)/usr/local/tomcat/conf/",
+                        "/usr/share/tomcat\\d+/conf/",
+                        "/var/lib/tomcat\\d+/conf/"
+                    ]
+                },
+                {
+                    "FriendlyName": "Apache .htaccess",
+                    "Detection": [
+                        ".htaccess"
+                    ],
+                    "Recommendations": {
+                        "TLS": "",
+                        "HSTS": "Add Header always set Strict-Transport-Security \"max-age=31536000; includeSubDomains\""
+                    },
+                    "Tags": [
+                        "apache",
+                        "htaccess"
+                    ],
+                    "ConfigPath": [
+                        "**/.htaccess"
+                    ]
+                },
+                {
+                    "InstallPath": [
+                        "(?i)/usr/sbin/nginx",
+                        "(?i)/etc/nginx/",
+                        "(?i)/usr/local/nginx/",
+                        "(?i)/var/www/html/",
+                        "(?i)/var/log/nginx/"
+                    ],
+                    "Detection": [
+                        "nginx.*\\.conf"
+                    ],
+                    "FriendlyName": "NGINX",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "nginx"
+                    ],
+                    "ConfigPath": [
+                        "/etc/nginx/nginx.conf",
+                        "(?i)/etc/nginx/sites\\-available/",
+                        "(?i)/etc/nginx/sites\\-enabled/"
+                    ]
+                },
+                {
+                    "InstallPath": [
+                        "(?i)/usr/sbin/apache2",
+                        "(?i)/etc/apache2/",
+                        "(?i)/var/www/html/",
+                        "(?i)/var/log/apache2/"
+                    ],
+                    "Detection": [
+                        "httpd\\.conf",
+                        "(?i)apache2"
+                    ],
+                    "FriendlyName": "Apache Web",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "apache",
+                        "httpd"
+                    ],
+                    "ConfigPath": [
+                        "/etc/apache2/apache2.conf",
+                        "(?i)/etc/apache2/sites\\-available/",
+                        "(?i)/etc/apache2/sites\\-enabled/"
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "server\\.xml",
+                        "(?i)tomcat"
+                    ],
+                    "FriendlyName": "Apache Tomcat",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "apache",
+                        "tomcat"
+                    ],
+                    "ConfigPath": [
+                        "",
+                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
+                        "/etc/tomcat\\d+/server\\.xml",
+                        "/etc/tomcat\\d+/tomcat-users\\.xml",
+                        "/etc/tomcat\\d+/tomcat\\.conf",
+                        "(?i)/usr/local/tomcat/conf/",
+                        "/usr/share/tomcat\\d+/conf/",
+                        "/var/lib/tomcat\\d+/conf/"
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/opt/tomcat",
+                    "Detection": [
+                        "server\\.xml",
+                        "(?i)tomcat"
+                    ],
+                    "FriendlyName": "Apache Tomcat",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "Tags": [
+                        "apache",
+                        "tomcat"
+                    ],
+                    "ConfigPath": [
+                        "",
+                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
+                        "/etc/tomcat\\d+/server\\.xml",
+                        "/etc/tomcat\\d+/tomcat-users\\.xml",
+                        "/etc/tomcat\\d+/tomcat\\.conf",
+                        "(?i)/usr/local/tomcat/conf/",
+                        "/usr/share/tomcat\\d+/conf/",
+                        "/var/lib/tomcat\\d+/conf/"
+                    ]
+                },
+                {
+                    "FriendlyName": "Apache .htaccess",
+                    "Detection": [
+                        ".htaccess"
+                    ],
+                    "Recommendations": {
+                        "TLS": "",
+                        "HSTS": "Add Header always set Strict-Transport-Security \"max-age=31536000; includeSubDomains\""
+                    },
+                    "Tags": [
+                        "apache",
+                        "htaccess"
+                    ],
+                    "ConfigPath": [
+                        "**/.htaccess"
+                    ]
+                }
+            ]
+        },
+        "Unknown": {
+            "Apps": [
+                {
+                    "InstallPath": "%PROGRAMS%\\PostgreSQL",
+                    "Detection": [
+                        "postgres.*\\.conf"
+                    ],
+                    "FriendlyName": "PostgreSQL",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "%PROGRAMS%\\MySQL",
+                    "Detection": [
+                        "my\\.cnf",
+                        "my\\.ini"
+                    ],
+                    "FriendlyName": "MySQL / MariaDB",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "%PROGRAMS%\\MariaDB",
+                    "Detection": [
+                        "my\\.cnf",
+                        "my\\.ini"
+                    ],
+                    "FriendlyName": "MySQL / MariaDB",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "%PROGRAMS%\\nodejs",
+                    "Detection": [
+                        "node.*\\.js",
+                        "express.*\\.js"
+                    ],
+                    "FriendlyName": "Node.js / Express",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "%USERDATA%\\npm",
+                    "Detection": [
+                        "node.*\\.js",
+                        "express.*\\.js"
+                    ],
+                    "FriendlyName": "Node.js / Express",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "(?i)flask",
+                        "(?i)django",
+                        "python.*\\.py"
+                    ],
+                    "FriendlyName": "Python / Django / Flask",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "(?i)postfix",
+                        "(?i)dovecot"
+                    ],
+                    "FriendlyName": "SMTP (Postfix/Dovecot)",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "(?i)docker",
+                        "(?i)k8s",
+                        "(?i)kube",
+                        "(?i)compose"
+                    ],
+                    "FriendlyName": "Docker/Kubernetes",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "java\\.security",
+                        "(?i)cacerts"
+                    ],
+                    "FriendlyName": "Java",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "",
+                    "Detection": [
+                        "(?i)default"
+                    ],
+                    "FriendlyName": "Unknown or Custom",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/usr/bin/openssl",
+                    "Detection": [
+                        "openssl.*"
+                    ],
+                    "FriendlyName": "OpenSSL",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/usr/lib/jvm",
+                    "Detection": [
+                        "java\\.security",
+                        "(?i)cacerts"
+                    ],
+                    "FriendlyName": "Java",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/usr/bin/python",
+                    "Detection": [
+                        "(?i)flask",
+                        "(?i)django",
+                        "python.*\\.py"
+                    ],
+                    "FriendlyName": "Python / Django / Flask",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/usr/bin/docker",
+                    "Detection": [
+                        "(?i)docker",
+                        "(?i)k8s",
+                        "(?i)kube",
+                        "(?i)compose"
+                    ],
+                    "FriendlyName": "Docker/Kubernetes",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "InstallPath": "(?i)/etc/postfix",
+                    "Detection": [
+                        "(?i)postfix",
+                        "(?i)dovecot"
+                    ],
+                    "FriendlyName": "SMTP (Postfix/Dovecot)",
+                    "Recommendations": {
+                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
+                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
+                    },
+                    "ConfigPath": [
+                        ""
+                    ]
+                },
+                {
+                    "FriendlyName": "OpenSSL",
+                    "Detection": [
+                        "(?i)openssl"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Limit cipher suites and set MinProtocol = TLSv1.2",
+                        "HSTS": ""
+                    },
+                    "Tags": [
+                        "openssl"
+                    ],
+                    "ConfigPath": [
+                        "/etc/pki/tls/openssl\\.cnf",
+                        "/etc/ssl/openssl\\.cnf"
+                    ]
+                },
+                {
+                    "FriendlyName": "Postfix",
+                    "Detection": [
+                        "(?i)postfix"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Set smtpd_tls_security_level = encrypt; disable SSLv2/3",
+                        "HSTS": ""
+                    },
+                    "Tags": [
+                        "postfix",
+                        "mail"
+                    ],
+                    "ConfigPath": [
+                        "/etc/postfix/main\\.cf"
+                    ]
+                },
+                {
+                    "FriendlyName": "HAProxy",
+                    "Detection": [
+                        "(?i)haproxy"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Bind SSL to TLSv1.2+ and strong ciphers",
+                        "HSTS": "Add http-response set-header Strict-Transport-Security max-age=31536000; includeSubDomains"
+                    },
+                    "Tags": [
+                        "haproxy",
+                        "proxy"
+                    ],
+                    "ConfigPath": [
+                        "/etc/haproxy/haproxy\\.cfg"
+                    ]
+                },
+                {
+                    "FriendlyName": "OpenSSL",
+                    "Detection": [
+                        "(?i)openssl"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Limit cipher suites and set MinProtocol = TLSv1.2",
+                        "HSTS": ""
+                    },
+                    "Tags": [
+                        "openssl"
+                    ],
+                    "ConfigPath": [
+                        "/etc/pki/tls/openssl\\.cnf",
+                        "/etc/ssl/openssl\\.cnf"
+                    ]
+                },
+                {
+                    "FriendlyName": "Postfix",
+                    "Detection": [
+                        "(?i)postfix"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Set smtpd_tls_security_level = encrypt; disable SSLv2/3",
+                        "HSTS": ""
+                    },
+                    "Tags": [
+                        "postfix",
+                        "mail"
+                    ],
+                    "ConfigPath": [
+                        "/etc/postfix/main\\.cf"
+                    ]
+                },
+                {
+                    "FriendlyName": "HAProxy",
+                    "Detection": [
+                        "(?i)haproxy"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Bind SSL to TLSv1.2+ and strong ciphers",
+                        "HSTS": "Add http-response set-header Strict-Transport-Security max-age=31536000; includeSubDomains"
+                    },
+                    "Tags": [
+                        "haproxy",
+                        "proxy"
+                    ],
+                    "ConfigPath": [
+                        "/etc/haproxy/haproxy\\.cfg"
+                    ]
+                },
+                {
+                    "FriendlyName": "Kubernetes Ingress",
+                    "Detection": [
+                        "(?i)ingress",
+                        "(?i)tls"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Use tls: with minimum TLS 1.2 and valid certs under ingress.spec.",
+                        "HSTS": "Add nginx.ingress.kubernetes.io/force-ssl-redirect and Strict-Transport-Security headers."
+                    },
+                    "Tags": [
+                        "kubernetes",
+                        "ingress",
+                        "yaml"
+                    ],
+                    "ConfigPath": [
+                        "/etc/kubernetes/manifests/.*\\.ya?ml",
+                        "/etc/rancher/k3s/.*\\.ya?ml",
+                        "/var/lib/rancher/k3s/server/manifests/.*\\.ya?ml",
+                        "/root/.kube/config"
+                    ]
+                },
+                {
+                    "FriendlyName": "DotEnv Config",
+                    "Detection": [
+                        ".env"
+                    ],
+                    "Recommendations": {
+                        "TLS": "Avoid storing hardcoded keys and secrets without encryption.",
+                        "HSTS": ""
+                    },
+                    "Tags": [
+                        "dotenv",
+                        "secrets"
+                    ],
+                    "ConfigPath": [
+                        "**/.env"
+                    ]
+                }
+            ]
+        }
+    },
+    "Extensions": [
+        "*.conf",
+        "*.xml",
+        "*.properties",
+        "*.json",
+        "*.yml",
+        "*.ini",
+        "*.cfg",
+        "*.bat",
+        "*.sh"
+    ],
+    "Keywords": [
+        "tls",
+        "ssl",
+        "keystore",
+        "truststore",
+        "cipher",
+        "protocol",
+        "javax.net",
+        "https.port",
+        "server.ssl.",
+        "jdk.tls",
+        "enabledProtocols",
+        "cipherSuites",
+        "useStartTLS",
+        "sslSocketFactory",
+        "securityProtocol"
+    ],
+    "Protocols": [
+        {
+            "protocol": "Tls13",
+            "remediation_reason": "This setting is insecure or outdated based on modern security standards.",
+            "risk": "medium"
+        },
+        {
+            "protocol": "Tls12",
+            "remediation_reason": "This setting is insecure or outdated based on modern security standards.",
+            "risk": "medium"
+        },
+        {
+            "protocol": "TLS 1.3",
+            "remediation_reason": "preferred",
+            "reason": "TLS 1.3 is the most secure and modern protocol. Source: IETF RFC 8446",
+            "risk": "low"
+        },
+        {
+            "protocol": "TLS 1.2",
+            "remediation_reason": "preferred",
+            "reason": "TLS 1.2 is widely supported and secure when configured properly. Source: NIST SP 800-52r2",
+            "risk": "low"
+        },
+        {
+            "protocol": "SSL 2.0",
+            "remediation_reason": "deprecated",
+            "reason": "SSL 2.0 is deprecated due to multiple vulnerabilities including POODLE. Source: NIST SP 800-52r2",
+            "risk": "high"
+        },
+        {
+            "protocol": "SSL 3.0",
+            "remediation_reason": "deprecated",
+            "reason": "SSL 3.0 is deprecated due to POODLE vulnerability. Source: NIST SP 800-52r2",
+            "risk": "high"
+        },
+        {
+            "protocol": "TLS 1.0",
+            "remediation_reason": "deprecated",
+            "reason": "TLS 1.0 is considered insecure. Deprecated by PCI-DSS v3.2.1 and major browsers. Source: Microsoft TLS deprecation notice",
+            "risk": "high"
+        },
+        {
+            "protocol": "TLS 1.1",
+            "remediation_reason": "deprecated",
+            "reason": "TLS 1.1 is deprecated due to weak cryptographic design. Source: IETF RFC 8996",
+            "risk": "high"
+        }
+    ],
+    "CipherSuites": [
+        {
+            "cipher": "TLS_AES_256_GCM_SHA384",
+            "reason": "Strong AEAD cipher for TLS 1.3. Recommended in RFC 8446.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_AES_128_GCM_SHA256",
+            "reason": "Efficient AEAD cipher for TLS 1.3. Recommended in RFC 8446.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_CHACHA20_POLY1305_SHA256",
+            "reason": "AEAD cipher for TLS 1.3, optimized for software implementations. Recommended in RFC 8446.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256",
+            "reason": "Secure and provides forward secrecy. Recommended in RFC 7525.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384",
+            "reason": "Strong encryption and forward secrecy. Recommended in RFC 7525.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+            "reason": "Balanced performance and security with forward secrecy. Mozilla SSL config recommendation.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+            "reason": "Provides forward secrecy and strong encryption. Mozilla SSL config recommendation.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_128_CBC_SHA",
+            "reason": "Does not provide forward secrecy and is vulnerable to BEAST and Lucky13. Deprecated in RFC 7525.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_256_CBC_SHA",
+            "reason": "Lacks forward secrecy and is vulnerable to known attacks. Deprecated in RFC 7525.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Weak encryption and vulnerable to SWEET32. Deprecated in RFC 7525.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_RC4_128_SHA",
+            "reason": "RC4 is insecure and prohibited. Deprecated in RFC 7465.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_NULL_SHA",
+            "reason": "NULL cipher provides no encryption. Should never be used. OWASP TLS Guidelines.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_DES_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_NULL_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_NULL_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_DES_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_DES_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_DES_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_EXPORT_WITH_DES40_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_EXPORT_WITH_RC4_40_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_AES_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_CAMELLIA_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_DES_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_RC4_128_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_DH_ANON_WITH_SEED_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_NULL_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_NULL_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_ANON_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_ANON_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_ANON_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_ANON_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECDH_ANON_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_GOSTR341112_256_WITH_28147_CNT_IMIT",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_GOSTR341112_256_WITH_KUZNYECHIK_CTR_OMAC",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_GOSTR341112_256_WITH_KUZNYECHIK_MGM_L",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_GOSTR341112_256_WITH_KUZNYECHIK_MGM_S",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_GOSTR341112_256_WITH_MAGMA_CTR_OMAC",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_GOSTR341112_256_WITH_MAGMA_MGM_L",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_GOSTR341112_256_WITH_MAGMA_MGM_S",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_EXPORT_WITH_RC2_CBC_40_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_EXPORT_WITH_RC2_CBC_40_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_EXPORT_WITH_RC4_40_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_EXPORT_WITH_RC4_40_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_3DES_EDE_CBC_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_DES_CBC_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_DES_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_IDEA_CBC_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_RC4_128_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_NULL_WITH_NULL_NULL",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_NULL_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_NULL_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_EXPORT_WITH_DES40_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_EXPORT_WITH_RC4_40_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_NULL_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_NULL_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_NULL_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_RC4_128_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_DES_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_NULL_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_NULL_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_RC4_128_MD5",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_SHA256_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_SHA384_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_SM4_CCM_SM3",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_SM4_GCM_SM3",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "insecure"
+        },
+        {
+            "cipher": "TLS_ECCPWD_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECCPWD_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "recommended"
+        },
+        {
+            "cipher": "TLS_AES_128_CCM_8_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_AES_128_CCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECCPWD_WITH_AES_128_CCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECCPWD_WITH_AES_256_CCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CCM_8_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "secure"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_DSS_WITH_SEED_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_128_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_256_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_PSK_WITH_CHACHA20_POLY1305_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+            "reason": "Does not provide adequate security due to lack of AEAD and weak key exchange. Deprecated in RFC 7525.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_128_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_128_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+            "reason": "Weak forward secrecy, lacks AEAD. Deprecated in RFC 7525.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_256_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_256_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DHE_RSA_WITH_SEED_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_AES_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_DSS_WITH_SEED_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_AES_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_DH_RSA_WITH_SEED_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_PSK_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+            "reason": "No AEAD; better alternatives exist. RFC 7525 recommends AEAD ciphers.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+            "reason": "Better alternatives exist with AEAD and stronger security. Deprecated in RFC 7525.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_ECDSA_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_ECDH_RSA_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_KRB5_WITH_IDEA_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_DHE_WITH_AES_128_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_DHE_WITH_AES_256_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_128_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_128_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_256_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_256_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_PSK_WITH_CHACHA20_POLY1305_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_AES_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_PSK_WITH_CHACHA20_POLY1305_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_128_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_128_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_256_CCM",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_256_CCM_8",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_AES_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_ARIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_ARIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_ARIA_256_CBC_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_ARIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_IDEA_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_RSA_WITH_SEED_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_DSS_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_DSS_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_DSS_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_RSA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_RSA_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_WITH_3DES_EDE_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_WITH_AES_128_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        },
+        {
+            "cipher": "TLS_SRP_SHA_WITH_AES_256_CBC_SHA",
+            "reason": "Added from external source or legacy configuration. Review required.",
+            "risk": "weak"
+        }
+    ]
 }
