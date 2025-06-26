@@ -1,773 +1,331 @@
 {
-    "OS": {
-        "Windows": {
-            "Apps": [
-                {
-                    "InstallPath": "%VOLUME%\\inetpub\\wwwroot",
-                    "Detection": [
-                        "(?i)system32",
-                        "(?i)schannel",
-                        "(?i)reg"
-                    ],
-                    "FriendlyName": "Windows Operating System",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows",
-                        "windows-registry"
-                    ],
-                    "ConfigPath": [
-                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols"
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "(?i)openvpn",
-                        "(?i)wg0",
-                        "(?i)wireguard"
-                    ],
-                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows-registry"
-                    ],
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/etc/openvpn",
-                    "Detection": [
-                        "(?i)openvpn",
-                        "(?i)wg0",
-                        "(?i)wireguard"
-                    ],
-                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows-registry"
-                    ],
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "FriendlyName": "Windows Registry",
-                    "InstallPath": "",
-                    "Detection": [],
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows"
-                    ],
-                    "ConfigPath": [
-                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols",
-                        "HKLM:\\Software\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002"
-                    ]
-                },
-                {
-                    "InstallPath": "%VOLUME%\\inetpub\\wwwroot",
-                    "Detection": [
-                        "(?i)system32",
-                        "(?i)schannel",
-                        "(?i)reg"
-                    ],
-                    "FriendlyName": "Windows Operating System",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows",
-                        "windows-registry"
-                    ],
-                    "ConfigPath": [
-                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols"
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "(?i)openvpn",
-                        "(?i)wg0",
-                        "(?i)wireguard"
-                    ],
-                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows-registry"
-                    ],
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/etc/openvpn",
-                    "Detection": [
-                        "(?i)openvpn",
-                        "(?i)wg0",
-                        "(?i)wireguard"
-                    ],
-                    "FriendlyName": "VPN (OpenVPN/WireGuard)",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows-registry"
-                    ],
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "FriendlyName": "Windows Registry",
-                    "InstallPath": "",
-                    "Detection": [],
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "windows"
-                    ],
-                    "ConfigPath": [
-                        "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols",
-                        "HKLM:\\Software\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002"
-                    ]
+    "Apps": {
+        "Windows Operating System": {
+            "Indicators": {
+                "OS": {
+                    "Windows": {
+                        "DirectoryPatterns": [
+                            "%VOLUME%\\inetpub\\wwwroot",
+                            "(?i)reg",
+                            "(?i)schannel",
+                            "(?i)system32"
+                        ],
+                        "FilePatterns": [],
+                        "RegistryPaths": [
+                            "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols"
+                        ]
+                    }
                 }
-            ]
+            }
         },
-        "Linux": {
-            "Apps": [
-                {
-                    "InstallPath": [
-                        "(?i)/usr/sbin/nginx",
-                        "(?i)/etc/nginx/",
-                        "(?i)/usr/local/nginx/",
-                        "(?i)/var/www/html/",
-                        "(?i)/var/log/nginx/"
-                    ],
-                    "Detection": [
-                        "nginx.*\\.conf"
-                    ],
-                    "FriendlyName": "NGINX",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "nginx"
-                    ],
-                    "ConfigPath": [
-                        "/etc/nginx/nginx.conf",
-                        "(?i)/etc/nginx/sites\\-available/",
-                        "(?i)/etc/nginx/sites\\-enabled/"
-                    ]
-                },
-                {
-                    "InstallPath": [
-                        "(?i)/usr/sbin/apache2",
-                        "(?i)/etc/apache2/",
-                        "(?i)/var/www/html/",
-                        "(?i)/var/log/apache2/"
-                    ],
-                    "Detection": [
-                        "httpd\\.conf",
-                        "(?i)apache2"
-                    ],
-                    "FriendlyName": "Apache Web",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "apache",
-                        "httpd"
-                    ],
-                    "ConfigPath": [
-                        "/etc/apache2/apache2.conf",
-                        "(?i)/etc/apache2/sites\\-available/",
-                        "(?i)/etc/apache2/sites\\-enabled/"
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "server\\.xml",
-                        "(?i)tomcat"
-                    ],
-                    "FriendlyName": "Apache Tomcat",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "apache",
-                        "tomcat"
-                    ],
-                    "ConfigPath": [
-                        "",
-                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
-                        "/etc/tomcat\\d+/server\\.xml",
-                        "/etc/tomcat\\d+/tomcat-users\\.xml",
-                        "/etc/tomcat\\d+/tomcat\\.conf",
-                        "(?i)/usr/local/tomcat/conf/",
-                        "/usr/share/tomcat\\d+/conf/",
-                        "/var/lib/tomcat\\d+/conf/"
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/opt/tomcat",
-                    "Detection": [
-                        "server\\.xml",
-                        "(?i)tomcat"
-                    ],
-                    "FriendlyName": "Apache Tomcat",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "apache",
-                        "tomcat"
-                    ],
-                    "ConfigPath": [
-                        "",
-                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
-                        "/etc/tomcat\\d+/server\\.xml",
-                        "/etc/tomcat\\d+/tomcat-users\\.xml",
-                        "/etc/tomcat\\d+/tomcat\\.conf",
-                        "(?i)/usr/local/tomcat/conf/",
-                        "/usr/share/tomcat\\d+/conf/",
-                        "/var/lib/tomcat\\d+/conf/"
-                    ]
-                },
-                {
-                    "FriendlyName": "Apache .htaccess",
-                    "Detection": [
-                        ".htaccess"
-                    ],
-                    "Recommendations": {
-                        "TLS": "",
-                        "HSTS": "Add Header always set Strict-Transport-Security \"max-age=31536000; includeSubDomains\""
-                    },
-                    "Tags": [
-                        "apache",
-                        "htaccess"
-                    ],
-                    "ConfigPath": [
-                        "**/.htaccess"
-                    ]
-                },
-                {
-                    "InstallPath": [
-                        "(?i)/usr/sbin/nginx",
-                        "(?i)/etc/nginx/",
-                        "(?i)/usr/local/nginx/",
-                        "(?i)/var/www/html/",
-                        "(?i)/var/log/nginx/"
-                    ],
-                    "Detection": [
-                        "nginx.*\\.conf"
-                    ],
-                    "FriendlyName": "NGINX",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "nginx"
-                    ],
-                    "ConfigPath": [
-                        "/etc/nginx/nginx.conf",
-                        "(?i)/etc/nginx/sites\\-available/",
-                        "(?i)/etc/nginx/sites\\-enabled/"
-                    ]
-                },
-                {
-                    "InstallPath": [
-                        "(?i)/usr/sbin/apache2",
-                        "(?i)/etc/apache2/",
-                        "(?i)/var/www/html/",
-                        "(?i)/var/log/apache2/"
-                    ],
-                    "Detection": [
-                        "httpd\\.conf",
-                        "(?i)apache2"
-                    ],
-                    "FriendlyName": "Apache Web",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "apache",
-                        "httpd"
-                    ],
-                    "ConfigPath": [
-                        "/etc/apache2/apache2.conf",
-                        "(?i)/etc/apache2/sites\\-available/",
-                        "(?i)/etc/apache2/sites\\-enabled/"
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "server\\.xml",
-                        "(?i)tomcat"
-                    ],
-                    "FriendlyName": "Apache Tomcat",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "apache",
-                        "tomcat"
-                    ],
-                    "ConfigPath": [
-                        "",
-                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
-                        "/etc/tomcat\\d+/server\\.xml",
-                        "/etc/tomcat\\d+/tomcat-users\\.xml",
-                        "/etc/tomcat\\d+/tomcat\\.conf",
-                        "(?i)/usr/local/tomcat/conf/",
-                        "/usr/share/tomcat\\d+/conf/",
-                        "/var/lib/tomcat\\d+/conf/"
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/opt/tomcat",
-                    "Detection": [
-                        "server\\.xml",
-                        "(?i)tomcat"
-                    ],
-                    "FriendlyName": "Apache Tomcat",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "Tags": [
-                        "apache",
-                        "tomcat"
-                    ],
-                    "ConfigPath": [
-                        "",
-                        "/etc/systemd/system/tomcat(\\d+)?\\.service",
-                        "/etc/tomcat\\d+/server\\.xml",
-                        "/etc/tomcat\\d+/tomcat-users\\.xml",
-                        "/etc/tomcat\\d+/tomcat\\.conf",
-                        "(?i)/usr/local/tomcat/conf/",
-                        "/usr/share/tomcat\\d+/conf/",
-                        "/var/lib/tomcat\\d+/conf/"
-                    ]
-                },
-                {
-                    "FriendlyName": "Apache .htaccess",
-                    "Detection": [
-                        ".htaccess"
-                    ],
-                    "Recommendations": {
-                        "TLS": "",
-                        "HSTS": "Add Header always set Strict-Transport-Security \"max-age=31536000; includeSubDomains\""
-                    },
-                    "Tags": [
-                        "apache",
-                        "htaccess"
-                    ],
-                    "ConfigPath": [
-                        "**/.htaccess"
-                    ]
+        "VPN (OpenVPN/WireGuard)": {
+            "Indicators": {
+                "OS": {
+                    "Windows": {
+                        "DirectoryPatterns": [
+                            "(?i)/etc/openvpn",
+                            "(?i)openvpn",
+                            "(?i)wg0",
+                            "(?i)wireguard"
+                        ],
+                        "FilePatterns": [],
+                        "RegistryPaths": []
+                    }
                 }
-            ]
+            }
         },
-        "Unknown": {
-            "Apps": [
-                {
-                    "InstallPath": "%PROGRAMS%\\PostgreSQL",
-                    "Detection": [
-                        "postgres.*\\.conf"
-                    ],
-                    "FriendlyName": "PostgreSQL",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "%PROGRAMS%\\MySQL",
-                    "Detection": [
-                        "my\\.cnf",
-                        "my\\.ini"
-                    ],
-                    "FriendlyName": "MySQL / MariaDB",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "%PROGRAMS%\\MariaDB",
-                    "Detection": [
-                        "my\\.cnf",
-                        "my\\.ini"
-                    ],
-                    "FriendlyName": "MySQL / MariaDB",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "%PROGRAMS%\\nodejs",
-                    "Detection": [
-                        "node.*\\.js",
-                        "express.*\\.js"
-                    ],
-                    "FriendlyName": "Node.js / Express",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "%USERDATA%\\npm",
-                    "Detection": [
-                        "node.*\\.js",
-                        "express.*\\.js"
-                    ],
-                    "FriendlyName": "Node.js / Express",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "(?i)flask",
-                        "(?i)django",
-                        "python.*\\.py"
-                    ],
-                    "FriendlyName": "Python / Django / Flask",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "(?i)postfix",
-                        "(?i)dovecot"
-                    ],
-                    "FriendlyName": "SMTP (Postfix/Dovecot)",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "(?i)docker",
-                        "(?i)k8s",
-                        "(?i)kube",
-                        "(?i)compose"
-                    ],
-                    "FriendlyName": "Docker/Kubernetes",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "java\\.security",
-                        "(?i)cacerts"
-                    ],
-                    "FriendlyName": "Java",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "",
-                    "Detection": [
-                        "(?i)default"
-                    ],
-                    "FriendlyName": "Unknown or Custom",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/usr/bin/openssl",
-                    "Detection": [
-                        "openssl.*"
-                    ],
-                    "FriendlyName": "OpenSSL",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/usr/lib/jvm",
-                    "Detection": [
-                        "java\\.security",
-                        "(?i)cacerts"
-                    ],
-                    "FriendlyName": "Java",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/usr/bin/python",
-                    "Detection": [
-                        "(?i)flask",
-                        "(?i)django",
-                        "python.*\\.py"
-                    ],
-                    "FriendlyName": "Python / Django / Flask",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/usr/bin/docker",
-                    "Detection": [
-                        "(?i)docker",
-                        "(?i)k8s",
-                        "(?i)kube",
-                        "(?i)compose"
-                    ],
-                    "FriendlyName": "Docker/Kubernetes",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "InstallPath": "(?i)/etc/postfix",
-                    "Detection": [
-                        "(?i)postfix",
-                        "(?i)dovecot"
-                    ],
-                    "FriendlyName": "SMTP (Postfix/Dovecot)",
-                    "Recommendations": {
-                        "TLS": "Use TLS 1.2 or higher. Disable SSL 2.0, SSL 3.0, and TLS 1.0/1.1.",
-                        "HSTS": "Add Strict-Transport-Security header with 'max-age=31536000; includeSubDomains'."
-                    },
-                    "ConfigPath": [
-                        ""
-                    ]
-                },
-                {
-                    "FriendlyName": "OpenSSL",
-                    "Detection": [
-                        "(?i)openssl"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Limit cipher suites and set MinProtocol = TLSv1.2",
-                        "HSTS": ""
-                    },
-                    "Tags": [
-                        "openssl"
-                    ],
-                    "ConfigPath": [
-                        "/etc/pki/tls/openssl\\.cnf",
-                        "/etc/ssl/openssl\\.cnf"
-                    ]
-                },
-                {
-                    "FriendlyName": "Postfix",
-                    "Detection": [
-                        "(?i)postfix"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Set smtpd_tls_security_level = encrypt; disable SSLv2/3",
-                        "HSTS": ""
-                    },
-                    "Tags": [
-                        "postfix",
-                        "mail"
-                    ],
-                    "ConfigPath": [
-                        "/etc/postfix/main\\.cf"
-                    ]
-                },
-                {
-                    "FriendlyName": "HAProxy",
-                    "Detection": [
-                        "(?i)haproxy"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Bind SSL to TLSv1.2+ and strong ciphers",
-                        "HSTS": "Add http-response set-header Strict-Transport-Security max-age=31536000; includeSubDomains"
-                    },
-                    "Tags": [
-                        "haproxy",
-                        "proxy"
-                    ],
-                    "ConfigPath": [
-                        "/etc/haproxy/haproxy\\.cfg"
-                    ]
-                },
-                {
-                    "FriendlyName": "OpenSSL",
-                    "Detection": [
-                        "(?i)openssl"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Limit cipher suites and set MinProtocol = TLSv1.2",
-                        "HSTS": ""
-                    },
-                    "Tags": [
-                        "openssl"
-                    ],
-                    "ConfigPath": [
-                        "/etc/pki/tls/openssl\\.cnf",
-                        "/etc/ssl/openssl\\.cnf"
-                    ]
-                },
-                {
-                    "FriendlyName": "Postfix",
-                    "Detection": [
-                        "(?i)postfix"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Set smtpd_tls_security_level = encrypt; disable SSLv2/3",
-                        "HSTS": ""
-                    },
-                    "Tags": [
-                        "postfix",
-                        "mail"
-                    ],
-                    "ConfigPath": [
-                        "/etc/postfix/main\\.cf"
-                    ]
-                },
-                {
-                    "FriendlyName": "HAProxy",
-                    "Detection": [
-                        "(?i)haproxy"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Bind SSL to TLSv1.2+ and strong ciphers",
-                        "HSTS": "Add http-response set-header Strict-Transport-Security max-age=31536000; includeSubDomains"
-                    },
-                    "Tags": [
-                        "haproxy",
-                        "proxy"
-                    ],
-                    "ConfigPath": [
-                        "/etc/haproxy/haproxy\\.cfg"
-                    ]
-                },
-                {
-                    "FriendlyName": "Kubernetes Ingress",
-                    "Detection": [
-                        "(?i)ingress",
-                        "(?i)tls"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Use tls: with minimum TLS 1.2 and valid certs under ingress.spec.",
-                        "HSTS": "Add nginx.ingress.kubernetes.io/force-ssl-redirect and Strict-Transport-Security headers."
-                    },
-                    "Tags": [
-                        "kubernetes",
-                        "ingress",
-                        "yaml"
-                    ],
-                    "ConfigPath": [
-                        "/etc/kubernetes/manifests/.*\\.ya?ml",
-                        "/etc/rancher/k3s/.*\\.ya?ml",
-                        "/var/lib/rancher/k3s/server/manifests/.*\\.ya?ml",
-                        "/root/.kube/config"
-                    ]
-                },
-                {
-                    "FriendlyName": "DotEnv Config",
-                    "Detection": [
-                        ".env"
-                    ],
-                    "Recommendations": {
-                        "TLS": "Avoid storing hardcoded keys and secrets without encryption.",
-                        "HSTS": ""
-                    },
-                    "Tags": [
-                        "dotenv",
-                        "secrets"
-                    ],
-                    "ConfigPath": [
-                        "**/.env"
-                    ]
+        "Windows Registry": {
+            "Indicators": {
+                "OS": {
+                    "Windows": {
+                        "DirectoryPatterns": [],
+                        "FilePatterns": [],
+                        "RegistryPaths": [
+                            "HKLM:\\Software\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002",
+                            "HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols"
+                        ]
+                    }
                 }
-            ]
+            }
+        },
+        "NGINX": {
+            "Indicators": {
+                "OS": {
+                    "Linux": {
+                        "DirectoryPatterns": [
+                            "(?i)/etc/nginx/",
+                            "(?i)/usr/local/nginx/",
+                            "(?i)/usr/sbin/nginx",
+                            "(?i)/var/log/nginx/",
+                            "(?i)/var/www/html/"
+                        ],
+                        "FilePatterns": [
+                            "nginx.*\\.conf"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Apache Web": {
+            "Indicators": {
+                "OS": {
+                    "Linux": {
+                        "DirectoryPatterns": [
+                            "(?i)/etc/apache2/",
+                            "(?i)/usr/sbin/apache2",
+                            "(?i)/var/log/apache2/",
+                            "(?i)/var/www/html/",
+                            "(?i)apache2"
+                        ],
+                        "FilePatterns": [
+                            "httpd\\.conf"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Apache Tomcat": {
+            "Indicators": {
+                "OS": {
+                    "Linux": {
+                        "DirectoryPatterns": [
+                            "(?i)/opt/tomcat",
+                            "(?i)tomcat"
+                        ],
+                        "FilePatterns": [
+                            "server\\.xml"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Apache .htaccess": {
+            "Indicators": {
+                "OS": {
+                    "Linux": {
+                        "DirectoryPatterns": [],
+                        "FilePatterns": [
+                            ".htaccess"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "PostgreSQL": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "%PROGRAMS%\\PostgreSQL"
+                        ],
+                        "FilePatterns": [
+                            "postgres.*\\.conf"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "MySQL / MariaDB": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "%PROGRAMS%\\MariaDB",
+                            "%PROGRAMS%\\MySQL"
+                        ],
+                        "FilePatterns": [
+                            "my\\.cnf",
+                            "my\\.ini"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Node.js / Express": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "%PROGRAMS%\\nodejs",
+                            "%USERDATA%\\npm"
+                        ],
+                        "FilePatterns": [
+                            "express.*\\.js",
+                            "node.*\\.js"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Python / Django / Flask": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)/usr/bin/python",
+                            "(?i)django",
+                            "(?i)flask"
+                        ],
+                        "FilePatterns": [
+                            "python.*\\.py"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "SMTP (Postfix/Dovecot)": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)/etc/postfix",
+                            "(?i)dovecot",
+                            "(?i)postfix"
+                        ],
+                        "FilePatterns": [],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Docker/Kubernetes": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)/usr/bin/docker",
+                            "(?i)compose",
+                            "(?i)docker",
+                            "(?i)k8s",
+                            "(?i)kube"
+                        ],
+                        "FilePatterns": [],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Java": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)/usr/lib/jvm",
+                            "(?i)cacerts"
+                        ],
+                        "FilePatterns": [
+                            "java\\.security"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "OpenSSL": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)/usr/bin/openssl",
+                            "(?i)openssl"
+                        ],
+                        "FilePatterns": [
+                            "openssl.*"
+                        ],
+                        "RegistryPaths": null
+                    },
+                    "MacOS": {
+                        "DirectoryPatterns": [
+                            "/usr/local/etc/openssl"
+                        ],
+                        "FilePatterns": [
+                            "/opt/homebrew/opt/openssl/bin/openssl",
+                            "/usr/bin/openssl",
+                            "/usr/local/opt/openssl/bin/openssl"
+                        ]
+                    },
+                    "Linux": {
+                        "DirectoryPatterns": [
+                            "/etc/ssl",
+                            "/usr/local/ssl"
+                        ],
+                        "FilePatterns": [
+                            "/usr/bin/openssl"
+                        ]
+                    },
+                    "Windows": {
+                        "DirectoryPatterns": [
+                            "C:\\Program Files\\OpenSSL-Win32",
+                            "C:\\Program Files\\OpenSSL-Win64"
+                        ],
+                        "FilePatterns": [
+                            "C:\\Program Files\\OpenSSL-Win32\\bin\\openssl.exe",
+                            "C:\\Program Files\\OpenSSL-Win64\\bin\\openssl.exe"
+                        ]
+                    }
+                }
+            }
+        },
+        "Postfix": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)postfix"
+                        ],
+                        "FilePatterns": [],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "HAProxy": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)haproxy"
+                        ],
+                        "FilePatterns": [],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "Kubernetes Ingress": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [
+                            "(?i)ingress",
+                            "(?i)tls"
+                        ],
+                        "FilePatterns": [],
+                        "RegistryPaths": null
+                    }
+                }
+            }
+        },
+        "DotEnv Config": {
+            "Indicators": {
+                "OS": {
+                    "Unknown": {
+                        "DirectoryPatterns": [],
+                        "FilePatterns": [
+                            ".env"
+                        ],
+                        "RegistryPaths": null
+                    }
+                }
+            }
         }
     },
     "Extensions": [
