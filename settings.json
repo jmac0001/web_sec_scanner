@@ -16,7 +16,11 @@
                         ]
                     }
                 }
-            }
+            },
+            "AuditCommand": [
+                "Get-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\*\\*' | Select-Object PSChildName, Enabled, DisabledByDefault",
+                "Get-TlsCipherSuite"
+            ]
         },
         "VPN (OpenVPN/WireGuard)": {
             "Indicators": {
@@ -32,7 +36,13 @@
                         "RegistryPaths": []
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/etc/openvpn/server.conf",
+                "/etc/wireguard/wg0.conf",
+                "C:\\Program Files\\OpenVPN\\config\\*.ovpn",
+                "C:\\Program Files\\WireGuard\\Configurations\\*.conf"
+            ]
         },
         "Windows Registry": {
             "Indicators": {
@@ -46,7 +56,11 @@
                         ]
                     }
                 }
-            }
+            },
+            "AuditCommand": [
+                "Get-Item -Path 'HKLM:\\Software\\Policies\\Microsoft\\Cryptography\\Configuration\\SSL\\00010002'",
+                "Get-Item -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols'"
+            ]
         },
         "NGINX": {
             "Indicators": {
@@ -65,7 +79,16 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditCommand": [
+                "openssl s_client -connect <hostname>:443 -tls1_2 -cipher 'ALL'",
+                "curl -s -D- https://<hostname>/ | findstr /I Strict-Transport-Security"
+            ],
+            "AuditConfigFile": [
+                "/etc/nginx/nginx.conf",
+                "/etc/nginx/conf.d/*.conf",
+                "C:\\nginx\\conf\\nginx.conf"
+            ]
         },
         "Apache Web": {
             "Indicators": {
@@ -84,7 +107,16 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditCommand": [
+                "openssl s_client -connect <hostname>:443 -tls1_2 -cipher 'ALL'",
+                "curl -s -D- https://<hostname>/ | findstr /I Strict-Transport-Security"
+            ],
+            "AuditConfigFile": [
+                "/etc/apache2/apache2.conf",
+                "/etc/apache2/sites-enabled/*.conf",
+                "C:\\Apache24\\conf\\httpd.conf"
+            ]
         },
         "Apache Tomcat": {
             "Indicators": {
@@ -100,7 +132,11 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/opt/tomcat/conf/server.xml",
+                "C:\\Program Files\\Apache Software Foundation\\Tomcat\\conf\\server.xml"
+            ]
         },
         "Apache .htaccess": {
             "Indicators": {
@@ -113,7 +149,10 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                ".htaccess"
+            ]
         },
         "PostgreSQL": {
             "Indicators": {
@@ -128,7 +167,11 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/etc/postgresql/*/main/postgresql.conf",
+                "C:\\Program Files\\PostgreSQL\\data\\postgresql.conf"
+            ]
         },
         "MySQL / MariaDB": {
             "Indicators": {
@@ -145,7 +188,11 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/etc/mysql/my.cnf",
+                "C:\\Program Files\\MySQL\\MySQL Server 8.0\\my.ini"
+            ]
         },
         "Node.js / Express": {
             "Indicators": {
@@ -162,7 +209,11 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                ".env",
+                "config.js"
+            ]
         },
         "Python / Django / Flask": {
             "Indicators": {
@@ -179,7 +230,12 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "settings.py",
+                "config.py",
+                ".env"
+            ]
         },
         "SMTP (Postfix/Dovecot)": {
             "Indicators": {
@@ -194,7 +250,11 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/etc/postfix/main.cf",
+                "/etc/dovecot/dovecot.conf"
+            ]
         },
         "Docker/Kubernetes": {
             "Indicators": {
@@ -211,7 +271,12 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "~/.docker/config.json",
+                "/etc/docker/daemon.json",
+                "~/.kube/config"
+            ]
         },
         "Java": {
             "Indicators": {
@@ -227,7 +292,11 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/usr/lib/jvm/java-*/lib/security/java.security",
+                "C:\\Program Files\\Java\\jre\\lib\\security\\java.security"
+            ]
         },
         "OpenSSL": {
             "Indicators": {
@@ -272,7 +341,15 @@
                         ]
                     }
                 }
-            }
+            },
+            "AuditCommand": [
+                "openssl ciphers 'ALL'",
+                "openssl s_client -connect <hostname>:443"
+            ],
+            "AuditConfigFile": [
+                "/etc/ssl/openssl.cnf",
+                "C:\\Program Files\\OpenSSL-Win64\\bin\\openssl.cfg"
+            ]
         },
         "Postfix": {
             "Indicators": {
@@ -285,7 +362,10 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/etc/postfix/main.cf"
+            ]
         },
         "HAProxy": {
             "Indicators": {
@@ -298,7 +378,10 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/etc/haproxy/haproxy.cfg"
+            ]
         },
         "Kubernetes Ingress": {
             "Indicators": {
@@ -312,7 +395,10 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                "/etc/ingress-controller/config.yaml"
+            ]
         },
         "DotEnv Config": {
             "Indicators": {
@@ -325,7 +411,10 @@
                         "RegistryPaths": null
                     }
                 }
-            }
+            },
+            "AuditConfigFile": [
+                ".env"
+            ]
         }
     },
     "Extensions": [
